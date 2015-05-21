@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F2C0955D-4405-4B69-BE1B-7B02AC25FAE4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SGDGameProject</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="SGD Project Properties.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="SGD Project Properties.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="SGD Wrappers\SGD_AudioManager.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_Event.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_EventManager.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_Geometry.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_GraphicsManager.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_IListener.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_InputManager.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_Message.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_MessageManager.cpp" />
+    <ClCompile Include="SGD Wrappers\SGD_Utilities.cpp" />
+    <ClCompile Include="source\AnchorPointAnimation.cpp" />
+    <ClCompile Include="source\BitmapFont.cpp" />
+    <ClCompile Include="source\CellAnimation.cpp" />
+    <ClCompile Include="source\CreditsState.cpp" />
+    <ClCompile Include="source\Entity.cpp" />
+    <ClCompile Include="source\EntityManager.cpp" />
+    <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\GameplayState.cpp" />
+    <ClCompile Include="source\HowToPlayState.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\MainMenuState.cpp" />
+    <ClCompile Include="source\OptionsState.cpp" />
+    <ClCompile Include="source\Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SGD Wrappers\SGD_AudioManager.h" />
+    <ClInclude Include="SGD Wrappers\SGD_Color.h" />
+    <ClInclude Include="SGD Wrappers\SGD_Declarations.h" />
+    <ClInclude Include="SGD Wrappers\SGD_Event.h" />
+    <ClInclude Include="SGD Wrappers\SGD_EventManager.h" />
+    <ClInclude Include="SGD Wrappers\SGD_Geometry.h" />
+    <ClInclude Include="SGD Wrappers\SGD_GraphicsManager.h" />
+    <ClInclude Include="SGD Wrappers\SGD_Handle.h" />
+    <ClInclude Include="SGD Wrappers\SGD_HandleManager.h" />
+    <ClInclude Include="SGD Wrappers\SGD_HandleManager.hpp" />
+    <ClInclude Include="SGD Wrappers\SGD_IListener.h" />
+    <ClInclude Include="SGD Wrappers\SGD_InputManager.h" />
+    <ClInclude Include="SGD Wrappers\SGD_Key.h" />
+    <ClInclude Include="SGD Wrappers\SGD_Message.h" />
+    <ClInclude Include="SGD Wrappers\SGD_MessageManager.h" />
+    <ClInclude Include="SGD Wrappers\SGD_String.h" />
+    <ClInclude Include="SGD Wrappers\SGD_Utilities.h" />
+    <ClInclude Include="source\AnchorPointAnimation.h" />
+    <ClInclude Include="source\BitmapFont.h" />
+    <ClInclude Include="source\CellAnimation.h" />
+    <ClInclude Include="source\CreditsState.h" />
+    <ClInclude Include="source\Entity.h" />
+    <ClInclude Include="source\EntityManager.h" />
+    <ClInclude Include="source\Game.h" />
+    <ClInclude Include="source\GameplayState.h" />
+    <ClInclude Include="source\HowToPlayState.h" />
+    <ClInclude Include="source\IEntity.h" />
+    <ClInclude Include="source\IGameState.h" />
+    <ClInclude Include="source\MainMenuState.h" />
+    <ClInclude Include="source\MessageID.h" />
+    <ClInclude Include="source\OptionsState.h" />
+    <ClInclude Include="source\Player.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
