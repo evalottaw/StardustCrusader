@@ -55,16 +55,17 @@ void HowToPlayState::Render(float elapsedTime)
 	BitmapFont* font = Game::GetInstance()->GetFont();
 
 	font->Draw("How To Play", SGD::Point{ 260, 100 }, 1.5f);
-	font->Draw("You are playing as Mr Fox", SGD::Point{ 330, 230 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("A moves Mr Fox to the left", SGD::Point{ 260, 280 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("D moves Mr Fox to the right", SGD::Point{ 260, 300 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("Space makes Mr Fox jump", SGD::Point{ 260, 320 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("1, 2, 3 swaps your weapons", SGD::Point{ 260, 340 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("Use the mouse cursor to aim and shoot", SGD::Point{ 260, 360 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("You are the only survivor after an alien virus", SGD::Point{ 260, 420 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("has spread across Planet Earth.", SGD::Point{ 260, 440 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("Your job is to fight your way though the Milky Way, ", SGD::Point{ 260, 460 }, 0.5f, SGD::Color{ 0, 0, 0 });
-	font->Draw("and destroy the evil Helios that resides at the Sun.", SGD::Point{ 260, 480 }, 0.5f, SGD::Color{ 0, 0, 0 });
+	font->Draw("You are playing as Mr Fox", SGD::Point{ 330, 230 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("A moves Mr Fox to the left", SGD::Point{ 260, 280 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("D moves Mr Fox to the right", SGD::Point{ 260, 300 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("Space makes Mr Fox jump", SGD::Point{ 260, 320 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("1, 2, 3 swaps your weapons", SGD::Point{ 260, 340 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("Use the mouse cursor to aim and shoot", SGD::Point{ 260, 360 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("You are the only survivor after an", SGD::Point{ 260, 420 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("alien virus has spread across Planet Earth.", SGD::Point{ 260, 440 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("Your job is to fight your way through ", SGD::Point{ 260, 460 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("the Milky Way, and destroy the evil", SGD::Point{ 260, 480 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("alien Helios that resides at the Sun.", SGD::Point{ 260, 500 }, 0.5f, SGD::Color{ 255, 255, 0 });
 
 
 

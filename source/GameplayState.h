@@ -46,7 +46,8 @@ public:
 
 	Entity* CreatePlayer(void);
 	SGD::HTexture GetLevelBackground(int _level);
-
+	bool IsGamePaused() const { return m_bisGamePaused; }
+	bool Pause(void);
 
 private:
 	//*****************************************************************//
@@ -70,4 +71,6 @@ private:
 	
 	SGD::HTexture m_hLevel1Background = SGD::INVALID_HANDLE;
 	Player* m_pPlayer;
+	bool m_bisGamePaused = false, m_bisKeyPressed = false;
+	int m_iCursor = 0;
 };

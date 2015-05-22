@@ -24,15 +24,18 @@ void Player::Update(float _elapsedTime)
 
 	
 
-	if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::D))
+	if (!GameplayState::GetInstance()->IsGamePaused())
 	{
-		m_ptPosition.x = GetPosition().x + GetVelocity().x;
-		SetDirection(RIGHT);
-	}
-	if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::A))
-	{
-		m_ptPosition.x = GetPosition().x - GetVelocity().x;
-		SetDirection(LEFT);
+		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::D))
+		{
+			m_ptPosition.x = GetPosition().x + GetVelocity().x;
+			SetDirection(RIGHT);
+		}
+		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::A))
+		{
+			m_ptPosition.x = GetPosition().x - GetVelocity().x;
+			SetDirection(LEFT);
+		}
 	}
 
 	PlayerInBounds();

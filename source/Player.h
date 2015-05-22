@@ -33,7 +33,7 @@ public:
 	bool GetVictory() const { return m_bVictory; }
 	float GetShotCooldown() const { return m_fShotCooldown; }
 	unsigned int GetScore() const { return m_uiPlayerScore; }
-
+	unsigned int GetNumLives() const { return m_uiLives; }
 
 	// mutators
 	void SetDirection(Direction _dir) { m_dPlayerDir = _dir; }
@@ -41,7 +41,7 @@ public:
 	void SetVictory(bool _victory) { m_bVictory = _victory; }
 	void SetShotCooldown(float _cooldown) { m_fShotCooldown = _cooldown; }
 	void SetScore(unsigned int _score) { m_uiPlayerScore = _score; }
-	
+	void SetNumLives(unsigned int _lives) { m_uiLives = _lives; }
 
 	// helper functions
 	void PlayerInBounds(void);
@@ -55,6 +55,7 @@ private:
 	bool m_bALive = true, m_bVictory = false;
 
 	float m_fShotCooldown;
-	unsigned int m_uiPlayerScore;
+	unsigned int m_uiPlayerScore = 0;
+	unsigned int m_uiLives = 3;
 };
 

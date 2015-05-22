@@ -63,6 +63,7 @@
 
 
 	Entity* player = CreatePlayer();
+	
 
 	m_pEntities->AddEntity(player, 0);
 
@@ -114,11 +115,24 @@
 		// ChangeState is VERY VOLATILE!!!
 		//	- can only be safely called by a game state's
 		//	  Update or Render methods!
-		Game::GetInstance()->ChangeState( MainMenuState::GetInstance() );
+		m_iCursor = 0;
+
+		m_bisGamePaused = true;
+		m_bisKeyPressed = true;  
 		
 		// Exit this state immediately
-		return true;	// keep playing in the new state
+		//return true;	// keep playing in the new state
 	}
+	// pause menu shows up 
+	if (m_bisGamePaused)
+	{
+		if (Pause())
+		{
+			return true;
+		}
+	}
+		
+
 	
 	
 	// Update the entities
@@ -155,8 +169,15 @@
 
 	// Render the entities
 	m_pEntities->RenderAll();
+	// draws the pause menu
+	if (m_bisGamePaused)
+	{
+		font->Draw("Pause", SGD::Point{ 300, 250 }, 1.5f);
+		font->Draw("Resume", SGD::Point{ 300, 400 }, 1.0f);
+		font->Draw("Quit", SGD::Point{ 300, 450 }, 1.0f);
+		font->Draw("0", SGD::Point{ 250, 400.0f + 50.0f * m_iCursor }, 1.0f);
+	}
 
-	
 	
 
 }
@@ -215,4 +236,53 @@ SGD::HTexture GameplayState::GetLevelBackground(int _level)
 	}
 
 	return temp;
+}
+
+bool GameplayState::Pause(void)
+{
+	// changes menu alternatives
+	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Down))
+	{
+		++m_iCursor;
+		if (m_iCursor > 1)
+			m_iCursor = 0;
+	}
+
+	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Up))
+	{
+		--m_iCursor;
+		if (m_iCursor < 0)
+			m_iCursor = 1;
+	}
+
+	// not working! should resume game =(
+	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Escape)
+		&& !m_bisKeyPressed)
+	{
+		m_bisGamePaused = false;
+		m_bisKeyPressed = true;
+		return true;
+	}
+	
+	m_bisKeyPressed = false;
+
+	
+	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Enter))
+	{
+		 
+		if (m_iCursor == 0)// resumes game
+		{
+			m_bisGamePaused = false;
+			return false;
+		}
+		else if (m_iCursor == 1)// quits to main menu
+		{
+			m_bisGamePaused = false;
+			Game::GetInstance()->ChangeState(MainMenuState::GetInstance());
+			return true;
+		}
+
+	}
+
+	return false;
 }
