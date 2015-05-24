@@ -27,6 +27,8 @@
 #include "EntityManager.h"
 #include "Entity.h"
 #include "Player.h"
+#include "Enemy.h"
+#include "Boss.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -57,18 +59,22 @@
 	SGD::MessageManager::GetInstance()->Initialize( &GameplayState::MessageProc );
 
 	m_hLevel1Background = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_LevelCut.png");
+	m_EnemyImgL1 = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_EnemyLvl1.png", SGD::Color{ 255, 255, 255 });
 
 	// Allocate the Entity Manager
 	m_pEntities = new EntityManager;
 
 
 	Entity* player = CreatePlayer();
+	Entity* enemy = CreateLvl1Enemy();
 	
 
 	m_pEntities->AddEntity(player, 0);
+	m_pEntities->AddEntity(enemy, 1);
 
 	
 	player->Release();
+	enemy->Release();
 }
 
 
@@ -91,6 +97,8 @@
 	}
 	
 	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hLevel1Background);
+	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_EnemyImgL1);
+
 
 
 	// Terminate & deallocate the SGD wrappers
@@ -117,7 +125,7 @@
 		//	  Update or Render methods!
 		m_iCursor = 0;
 
-		m_bisGamePaused = true;
+		m_bisGamePaused = !m_bisGamePaused;
 		m_bisKeyPressed = true;  
 		
 		// Exit this state immediately
@@ -132,7 +140,7 @@
 		}
 	}
 		
-
+	
 	
 	
 	// Update the entities
@@ -226,6 +234,17 @@ Entity* GameplayState::CreatePlayer(void)
 	
 
 	return player;
+}
+
+Entity* GameplayState::CreateLvl1Enemy(void)
+{
+	Enemy* enemy = new Enemy;
+	enemy->SetImage(m_EnemyImgL1);
+	enemy->SetSize(SGD::Size{ 64, 80 });
+	enemy->SetVelocity(SGD::Vector{ 0.2f, 0 });
+	enemy->SetPosition(SGD::Point{ Game::GetInstance()->GetScreenSize().width,
+		Game::GetInstance()->GetScreenSize().height - 180 });
+	return enemy;
 }
 SGD::HTexture GameplayState::GetLevelBackground(int _level)
 {

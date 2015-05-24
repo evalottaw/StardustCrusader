@@ -105,6 +105,7 @@
     <ClCompile Include="source\Boss.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="source\Projectile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SGD Wrappers\SGD_Declarations.h">
@@ -209,5 +210,6 @@
     <ClInclude Include="source\Boss.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="source\Projectile.h" />
   </ItemGroup>
 </Project>

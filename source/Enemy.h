@@ -12,5 +12,7 @@ public:
 	void Render(void);
 	void Update(float elapsedTime);
 
+	
+
 };
 

@@ -111,6 +111,8 @@ int	Game::Update( void )
 		|| SGD::AudioManager::GetInstance()->Update() == false )
 		return +1;	// exit when window is closed
 
+
+
 	
 	// Calculate the elapsed time between frames
 	unsigned long now = GetTickCount();
@@ -121,6 +123,17 @@ int	Game::Update( void )
 	if( elapsedTime > 0.125f )
 		elapsedTime = 0.125f;
 
+	if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::Alt)
+		&& SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Enter))
+	{
+		m_bIsFullscreenToggled = !m_bIsFullscreenToggled;
+		SGD::GraphicsManager::GetInstance()->Resize(m_szScreenSize, m_bIsFullscreenToggled);
+	}
+
+	
+	
+
+		
 
 	// Update & Render the current state
 	if( m_pCurrState->Update( elapsedTime ) == false )

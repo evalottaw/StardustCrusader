@@ -98,5 +98,7 @@ private:
 	SGD::HTexture m_hMainMenuBackground = SGD::INVALID_HANDLE;
 	SGD::HTexture m_PlayerImg = SGD::INVALID_HANDLE;
 
+	bool m_bIsFullscreenToggled = true;
+	bool m_bIsKeyPressed = false;
 
 };

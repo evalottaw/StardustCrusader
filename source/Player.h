@@ -2,6 +2,7 @@
 #include "Entity.h"
 
 #include "../SGD Wrappers/SGD_AudioManager.h"
+#include "../SGD Wrappers/SGD_Geometry.h"
 
 class Player :
 	public Entity
@@ -21,7 +22,7 @@ public:
 
 	int GetType(void) const { return ENT_PLAYER; }
 
-	
+	void SwitchWeapons();
 
 	// accessors
 	Direction GetDirection() const { return m_dPlayerDir; }
@@ -33,7 +34,8 @@ public:
 	bool GetVictory() const { return m_bVictory; }
 	float GetShotCooldown() const { return m_fShotCooldown; }
 	unsigned int GetScore() const { return m_uiPlayerScore; }
-	unsigned int GetNumLives() const { return m_uiLives; }
+	int GetNumLives() const { return m_uiLives; }
+	int GetPlayerHP() const { return m_uiPlayerHP; }
 
 	// mutators
 	void SetDirection(Direction _dir) { m_dPlayerDir = _dir; }
@@ -41,7 +43,8 @@ public:
 	void SetVictory(bool _victory) { m_bVictory = _victory; }
 	void SetShotCooldown(float _cooldown) { m_fShotCooldown = _cooldown; }
 	void SetScore(unsigned int _score) { m_uiPlayerScore = _score; }
-	void SetNumLives(unsigned int _lives) { m_uiLives = _lives; }
+	void SetNumLives(int _lives) { m_uiLives = _lives; }
+	void SetPlayerHP(int _hp) { m_uiPlayerHP = _hp; }
 
 	// helper functions
 	void PlayerInBounds(void);
@@ -50,12 +53,14 @@ private:
 	
 	Direction m_dPlayerDir = RIGHT;
 
+	SGD::Rectangle m_rRenderWithWeapon = SGD::Rectangle{ 0, 0, 0, 0 };
+
 	SGD::HAudio m_hHurtSfx, m_hShotBazookaSfx, m_hShotLaserGunSfx, m_hMeleeSfx;
 
 	bool m_bALive = true, m_bVictory = false;
 
 	float m_fShotCooldown;
 	unsigned int m_uiPlayerScore = 0;
-	unsigned int m_uiLives = 3;
+	int m_uiLives = 3, m_uiPlayerHP = 100;
 };
 

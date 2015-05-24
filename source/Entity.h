@@ -30,7 +30,9 @@ protected:	virtual ~Entity( void )	= default;		// protected to force reference c
 public:
 	//*****************************************************************//
 	// Entity Types:
-	enum EntityType { ENT_BASE, ENT_PLAYER, ENT_ENEMY, ENT_ENEMY_BOSS};
+	enum EntityType { ENT_BASE, ENT_PLAYER, ENT_ENEMY, ENT_ENEMY_BOSS, ENT_PROJECTILE };
+
+	enum WeaponType { WEP_PRIMARY, WEP_SECONDARY, WEP_MELEE };
 
 
 	//*****************************************************************//
@@ -58,7 +60,8 @@ public:
 	SGD::Vector GetAcceleration(void) const { return m_vtAcceleration; }
 	SGD::Size		GetSize		( void ) const			{	return m_szSize;		}
 	float			GetRotation	( void ) const			{	return m_fRotation;		}
-	
+	WeaponType GetWeaponType() const { return m_wtWeapon; }
+
 	// Mutators:
 	void			SetImage	( SGD::HTexture	img  )	{	m_hImage		= img;	}
 	void			SetPosition	( SGD::Point	pos  ) 	{	m_ptPosition	= pos;	}
@@ -66,6 +69,7 @@ public:
 	void			SetSize		( SGD::Size		size ) 	{	m_szSize		= size;	}
 	void			SetRotation	( float			rad	 )	{	m_fRotation		= rad;	}
 	void SetAcceleration(SGD::Vector _acc) { m_vtAcceleration = _acc; }
+	void SetWeapon(WeaponType _wep) { m_wtWeapon = _wep; }
 
 protected:
 	//*****************************************************************//
@@ -82,5 +86,5 @@ private:
 	//*****************************************************************//
 	// reference count
 	unsigned int	m_unRefCount	= 1;	// calling new gives the 'prime' reference
-
+	WeaponType m_wtWeapon;
 };
