@@ -1,34 +1,33 @@
 //*********************************************************************//
 //	File:		GameplayState.cpp
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	GameplayState class initializes & runs the game logic
 //*********************************************************************//
 
 #include "GameplayState.h"
-
 #include "Game.h"
 #include "MainMenuState.h"
+#include "MessageID.h"
+#include "BitmapFont.h"
+#include "EntityManager.h"
+#include "Entity.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "Boss.h"
+#include "Projectile.h"
+#include "CreateBulletMessage.h"
 
 #include "../SGD Wrappers/SGD_AudioManager.h"
 #include "../SGD Wrappers/SGD_GraphicsManager.h"
 #include "../SGD Wrappers/SGD_InputManager.h"
 #include "../SGD Wrappers/SGD_String.h"
 #include "../SGD Wrappers/SGD_Utilities.h"
-
 #include "../SGD Wrappers/SGD_EventManager.h"
 #include "../SGD Wrappers/SGD_Event.h"
-
 #include "../SGD Wrappers/SGD_MessageManager.h"
 #include "../SGD Wrappers/SGD_Message.h"
-#include "MessageID.h"
-#include "BitmapFont.h"
 
-#include "EntityManager.h"
-#include "Entity.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Boss.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -57,9 +56,17 @@
 	// Initialize the Event & Message Managers
 	SGD::EventManager::GetInstance()->Initialize();
 	SGD::MessageManager::GetInstance()->Initialize( &GameplayState::MessageProc );
-
+	// loads textures
 	m_hLevel1Background = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_LevelCut.png");
-	m_EnemyImgL1 = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_EnemyLvl1.png", SGD::Color{ 255, 255, 255 });
+	m_hEnemyImgL1 = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_EnemyLvl1.png", SGD::Color{ 255, 255, 255 });
+	m_hProjectileSecImage = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_ProjectileSec.png", SGD::Color{ 255, 255, 255 });
+
+	// loads sfx + background music
+	m_hProjectileSecSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_SecondaryShotSfx.wav");
+	m_hBackgroundMus = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_BackgroundMusic.xwm");
+
+	// plays background music looping
+	SGD::AudioManager::GetInstance()->PlayAudio(m_hBackgroundMus, playBackgMus);
 
 	// Allocate the Entity Manager
 	m_pEntities = new EntityManager;
@@ -70,7 +77,7 @@
 	
 
 	m_pEntities->AddEntity(player, 0);
-	m_pEntities->AddEntity(enemy, 1);
+	m_pEntities->AddEntity(enemy, 0);
 
 	
 	player->Release();
@@ -96,8 +103,14 @@
 		m_pEntities = nullptr;
 	}
 	
+	// unloads textures
 	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hLevel1Background);
-	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_EnemyImgL1);
+	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hEnemyImgL1);
+	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hProjectileSecImage);
+	// unloads audio
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hProjectileSecSfx);
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hBackgroundMus);
+	
 
 
 
@@ -127,6 +140,7 @@
 
 		m_bisGamePaused = !m_bisGamePaused;
 		m_bisKeyPressed = true;  
+		
 		
 		// Exit this state immediately
 		//return true;	// keep playing in the new state
@@ -169,9 +183,8 @@
 
 	BitmapFont* font = Game::GetInstance()->GetFont();
 
-	font->Draw("Level", SGD::Point{ 2, 2 }, 1.0f, SGD::Color{ 255, 0, 0, 255 });
-	font->Draw("1", SGD::Point{ 170, 2 }, 1.0f, SGD::Color{ 255, 0, 0, 255 });
-	font->Draw("Score", SGD::Point{ 250, 2 }, 1.0f, SGD::Color{ 255, 0, 0, 255 });
+	font->Draw("Kill all enemies to advance", SGD::Point{ 2, 2 }, 0.7f, SGD::Color{ 255, 0, 0, 255 });
+	
 
 	
 
@@ -207,12 +220,21 @@
 	// What type of message?
 	switch( pMsg->GetMessageID() )
 	{
+	case MessageID::MSG_CREATE_BULLET:
+		{
+			const CreateBulletMessage* message = dynamic_cast<const CreateBulletMessage*>(pMsg);
+			Entity* enemy = message->GetBulletOwner();
+			Entity* entity = GameplayState::GetInstance()->CreateProjectile(enemy);
+			GameplayState::GetInstance()->m_pEntities->AddEntity(entity, 1);
+			entity->Release(); GameplayState::GetInstance()->m_pEntities->AddEntity(entity, 2);
+		}
+		break;
+	case MessageID::MSG_DESTROY_ENTITY:
+		{
 
-
-
-
+		}
+		break;
 	default:
-	case MessageID::MSG_UNKNOWN:
 		SGD_PRINT( L"GameplayState::MessageProc - unknown message id\n" );
 		break;
 	}
@@ -231,6 +253,10 @@ Entity* GameplayState::CreatePlayer(void)
 	player->SetPosition(SGD::Point{ 0, Game::GetInstance()->GetScreenSize().height - 105});
 	player->SetSize(SGD::Size{ 32, 32 });
 	player->SetVelocity(SGD::Vector{ 0.7f, 0 });
+	player->SetSecondarySfx(m_hProjectileSecSfx);
+	player->SetScore(0);
+	player->SetNumLives(3);
+	
 	
 
 	return player;
@@ -239,12 +265,35 @@ Entity* GameplayState::CreatePlayer(void)
 Entity* GameplayState::CreateLvl1Enemy(void)
 {
 	Enemy* enemy = new Enemy;
-	enemy->SetImage(m_EnemyImgL1);
+	enemy->SetImage(m_hEnemyImgL1);
 	enemy->SetSize(SGD::Size{ 64, 80 });
 	enemy->SetVelocity(SGD::Vector{ 0.2f, 0 });
 	enemy->SetPosition(SGD::Point{ Game::GetInstance()->GetScreenSize().width,
 		Game::GetInstance()->GetScreenSize().height - 180 });
+	
 	return enemy;
+}
+
+Entity* GameplayState::CreateProjectile(Entity* entity)
+{
+	Projectile* projectile = new Projectile;
+	projectile->SetImage(m_hProjectileSecImage);
+	projectile->SetProjectileOwner(entity);
+	projectile->SetSize(SGD::Size{ 32, 32 });
+	projectile->SetPosition(SGD::Point{ entity->GetPosition().x + entity->GetSize().width * 2.5f, entity->GetPosition().y + entity->GetSize().height / 2});
+	projectile->SetRotation(entity->GetRotation());
+
+	SGD::Vector vel = SGD::Vector{ 1, 0 };
+	if (entity->GetSpeed() > 0)
+		vel *= 150 + entity->GetSpeed();
+	else
+		vel *= 150;
+
+	vel.Rotate(projectile->GetRotation());
+	projectile->SetVelocity(vel);
+	return projectile;
+
+	
 }
 SGD::HTexture GameplayState::GetLevelBackground(int _level)
 {
@@ -297,7 +346,10 @@ bool GameplayState::Pause(void)
 		else if (m_iCursor == 1)// quits to main menu
 		{
 			m_bisGamePaused = false;
+			// stops the music from playing in the menu screen
+			SGD::AudioManager::GetInstance()->StopAudio(m_hBackgroundMus);
 			Game::GetInstance()->ChangeState(MainMenuState::GetInstance());
+
 			return true;
 		}
 

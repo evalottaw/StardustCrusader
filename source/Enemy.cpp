@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Game.h"
 #include "GameplayState.h"
+#include "Player.h"
 
 #include "../SGD Wrappers/SGD_GraphicsManager.h"
 #include "../SGD Wrappers/SGD_AudioManager.h"
@@ -24,7 +25,8 @@ void Enemy::Render(void)
 
 void Enemy::Update(float elapsedTime)
 {
-	if (!GameplayState::GetInstance()->IsGamePaused())
+	if (!GameplayState::GetInstance()->IsGamePaused()
+		)
 	{
 		if (GetPosition().x <= Game::GetInstance()->GetScreenSize().width / 2)
 		{

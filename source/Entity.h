@@ -60,6 +60,7 @@ public:
 	SGD::Vector GetAcceleration(void) const { return m_vtAcceleration; }
 	SGD::Size		GetSize		( void ) const			{	return m_szSize;		}
 	float			GetRotation	( void ) const			{	return m_fRotation;		}
+	float GetSpeed(void) const { return m_fSpeed; }
 	WeaponType GetWeaponType() const { return m_wtWeapon; }
 
 	// Mutators:
@@ -69,6 +70,7 @@ public:
 	void			SetSize		( SGD::Size		size ) 	{	m_szSize		= size;	}
 	void			SetRotation	( float			rad	 )	{	m_fRotation		= rad;	}
 	void SetAcceleration(SGD::Vector _acc) { m_vtAcceleration = _acc; }
+	void SetSpeed(float _speed) { m_fSpeed = _speed; }
 	void SetWeapon(WeaponType _wep) { m_wtWeapon = _wep; }
 
 protected:
@@ -79,6 +81,7 @@ protected:
 	SGD::Vector		m_vtVelocity	= SGD::Vector{ 0, 0 };	// 2D velocity
 	SGD::Size		m_szSize		= SGD::Size{ 0, 0 };	// 2D size
 	float			m_fRotation		= 0.0f;
+	float m_fSpeed = 0.0f;
 
 	SGD::Vector m_vtAcceleration = SGD::Vector{ 0, 0 };
 

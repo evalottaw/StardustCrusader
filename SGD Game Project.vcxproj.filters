@@ -105,7 +105,15 @@
     <ClCompile Include="source\Boss.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="source\Projectile.cpp" />
+    <ClCompile Include="source\Projectile.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CreateBulletMessage.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DestroyEntityMessage.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SGD Wrappers\SGD_Declarations.h">
@@ -210,6 +218,14 @@
     <ClInclude Include="source\Boss.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="source\Projectile.h" />
+    <ClInclude Include="source\Projectile.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CreateBulletMessage.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DestroyEntityMessage.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

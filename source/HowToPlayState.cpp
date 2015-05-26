@@ -4,10 +4,12 @@
 #include "BitmapFont.h"
 #include "Player.h"
 #include "GameplayState.h"
+#include "Enemy.h"
 
 #include "../SGD Wrappers/SGD_Handle.h"
 #include "../SGD Wrappers/SGD_InputManager.h"
 #include "../SGD Wrappers/SGD_GraphicsManager.h"
+#include "../SGD Wrappers/SGD_EventManager.h"
 
 
 HowToPlayState::HowToPlayState()
@@ -28,13 +30,12 @@ HowToPlayState* HowToPlayState::GetInstance(void)
 
 void HowToPlayState::Enter(void)
 {
-	m_pPlayer = new Player;
+	
 }
 
 void HowToPlayState::Exit(void)
 {
-	delete m_pPlayer;
-	m_pPlayer = nullptr;
+	
 }
 	 
 bool HowToPlayState::Update(float elapsedTime)
@@ -50,12 +51,14 @@ bool HowToPlayState::Update(float elapsedTime)
 void HowToPlayState::Render(float elapsedTime)
 {
 	SGD::GraphicsManager::GetInstance()->DrawTexture(Game::GetInstance()->GetMenuBackground(), SGD::Point{ 0, 0 });
-	SGD::GraphicsManager::GetInstance()->DrawTextureSection(m_pPlayer->GetImage(), SGD::Point{ 240, 200 }, SGD::Rectangle{ 0, 0, 32, 32 }, 0, {}, {}, SGD::Size{ 2.0f, 2.0f });
+	SGD::GraphicsManager::GetInstance()->DrawTextureSection(Game::GetInstance()->GetPlayerImg(), SGD::Point{ 180, 200 }, SGD::Rectangle{ 0, 0, 32, 32 }, 0, {}, {}, SGD::Size{ 2.0f, 2.0f });
+	SGD::GraphicsManager::GetInstance()->DrawTextureSection(Game::GetInstance()->GetEnemyImg() , SGD::Point{ 120, 500 }, SGD::Rectangle{ 0, 0, 64, 80 }, 0, {}, {}, SGD::Size{ 2.0f, 2.0f });
+
 
 	BitmapFont* font = Game::GetInstance()->GetFont();
 
 	font->Draw("How To Play", SGD::Point{ 260, 100 }, 1.5f);
-	font->Draw("You are playing as Mr Fox", SGD::Point{ 330, 230 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("You are playing as Mr Fox", SGD::Point{ 260, 230 }, 0.5f, SGD::Color{ 255, 255, 0 });
 	font->Draw("A moves Mr Fox to the left", SGD::Point{ 260, 280 }, 0.5f, SGD::Color{ 255, 255, 0 });
 	font->Draw("D moves Mr Fox to the right", SGD::Point{ 260, 300 }, 0.5f, SGD::Color{ 255, 255, 0 });
 	font->Draw("Space makes Mr Fox jump", SGD::Point{ 260, 320 }, 0.5f, SGD::Color{ 255, 255, 0 });
@@ -66,6 +69,10 @@ void HowToPlayState::Render(float elapsedTime)
 	font->Draw("Your job is to fight your way through ", SGD::Point{ 260, 460 }, 0.5f, SGD::Color{ 255, 255, 0 });
 	font->Draw("the Milky Way, and destroy the evil", SGD::Point{ 260, 480 }, 0.5f, SGD::Color{ 255, 255, 0 });
 	font->Draw("alien Helios that resides at the Sun.", SGD::Point{ 260, 500 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("This is the enemy you have to overcome", SGD::Point{ 260, 570 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("before you get to fight Helios.", SGD::Point{ 260, 590 }, 0.5f, SGD::Color{ 255, 255, 0 });
+	font->Draw("Simply shoot them to advance in the level.", SGD::Point{ 260, 610 }, 0.5f, SGD::Color{ 255, 255, 0 });
+
 
 
 

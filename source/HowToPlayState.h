@@ -1,7 +1,7 @@
 #pragma once
 #include "IGameState.h"
 
-class Player;
+
 class HowToPlayState :
 	public IGameState
 {
@@ -21,7 +21,7 @@ public:
 
 private:
 
-	Player* m_pPlayer;
+	
 
 };
 

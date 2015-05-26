@@ -94,7 +94,9 @@
     <ClCompile Include="source\BitmapFont.cpp" />
     <ClCompile Include="source\Boss.cpp" />
     <ClCompile Include="source\CellAnimation.cpp" />
+    <ClCompile Include="source\CreateBulletMessage.cpp" />
     <ClCompile Include="source\CreditsState.cpp" />
+    <ClCompile Include="source\DestroyEntityMessage.cpp" />
     <ClCompile Include="source\Enemy.cpp" />
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\EntityManager.cpp" />
@@ -129,7 +131,9 @@
     <ClInclude Include="source\BitmapFont.h" />
     <ClInclude Include="source\Boss.h" />
     <ClInclude Include="source\CellAnimation.h" />
+    <ClInclude Include="source\CreateBulletMessage.h" />
     <ClInclude Include="source\CreditsState.h" />
+    <ClInclude Include="source\DestroyEntityMessage.h" />
     <ClInclude Include="source\Enemy.h" />
     <ClInclude Include="source\Entity.h" />
     <ClInclude Include="source\EntityManager.h" />

@@ -58,7 +58,9 @@ public:
 
 
 	SGD::HTexture GetMenuBackground() const { return m_hMainMenuBackground; }
-	SGD::HTexture GetPlayerImg() const { return m_PlayerImg; }
+	SGD::HTexture GetPlayerImg() const { return m_hPlayerImg; }
+	SGD::HTexture GetEnemyImg() const { return m_hEnemyImg; }
+
 
 	
 private:
@@ -96,7 +98,9 @@ private:
 
 
 	SGD::HTexture m_hMainMenuBackground = SGD::INVALID_HANDLE;
-	SGD::HTexture m_PlayerImg = SGD::INVALID_HANDLE;
+	SGD::HTexture m_hPlayerImg = SGD::INVALID_HANDLE;
+	SGD::HTexture m_hEnemyImg = SGD::INVALID_HANDLE;
+
 
 	bool m_bIsFullscreenToggled = true;
 	bool m_bIsKeyPressed = false;

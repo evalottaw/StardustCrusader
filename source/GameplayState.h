@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		GameplayState.h
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	GameplayState class initializes & runs the game logic
 //*********************************************************************//
 
@@ -12,6 +12,7 @@
 #include "../SGD Wrappers/SGD_Declarations.h"	// uses Message
 #include "../SGD Wrappers/SGD_GraphicsManager.h"
 
+#include "Player.h"
 
 //*********************************************************************//
 // Forward class declaration
@@ -46,9 +47,14 @@ public:
 
 	Entity* CreatePlayer(void);
 	Entity* CreateLvl1Enemy(void);
+	Entity* CreateProjectile(Entity* entity);
+
 	SGD::HTexture GetLevelBackground(int _level);
+	SGD::HTexture GetEnemyImg(void) const { return m_hEnemyImgL1; }
+	SGD::HAudio GetSecShotSfx(void) const { return m_hProjectileSecSfx; }
 	bool IsGamePaused() const { return m_bisGamePaused; }
 	bool Pause(void);
+
 
 private:
 	//*****************************************************************//
@@ -71,9 +77,15 @@ private:
 
 	
 	SGD::HTexture m_hLevel1Background = SGD::INVALID_HANDLE;
-	SGD::HTexture m_EnemyImgL1 = SGD::INVALID_HANDLE;
+	SGD::HTexture m_hEnemyImgL1 = SGD::INVALID_HANDLE;
+	SGD::HTexture m_hProjectileSecImage = SGD::INVALID_HANDLE;
+
+	SGD::HAudio m_hProjectileSecSfx = SGD::INVALID_HANDLE;
+	SGD::HAudio m_hBackgroundMus = SGD::INVALID_HANDLE;
+
 
 	Player* m_pPlayer;
 	bool m_bisGamePaused = false, m_bisKeyPressed = false;
+	bool playBackgMus = true;
 	int m_iCursor = 0;
 };

@@ -1,11 +1,18 @@
+//*********************************************************************//
+//	File:		Player.h
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Handles the Player entity
+//*********************************************************************//
 #pragma once
 #include "Entity.h"
 
 #include "../SGD Wrappers/SGD_AudioManager.h"
 #include "../SGD Wrappers/SGD_Geometry.h"
+#include "../SGD Wrappers/SGD_IListener.h"
 
 class Player :
-	public Entity
+	public Entity, public SGD::IListener
 {
 
 	enum Direction
@@ -23,11 +30,11 @@ public:
 	int GetType(void) const { return ENT_PLAYER; }
 
 	void SwitchWeapons();
-
+	void HandleEvent(const SGD::Event* pEvent);
 	// accessors
 	Direction GetDirection() const { return m_dPlayerDir; }
 	SGD::HAudio GetShotBazookaSfx() const { return m_hShotBazookaSfx; }
-	SGD::HAudio GetShotLaserGunSfx() const { return m_hShotLaserGunSfx; }
+	SGD::HAudio GetSecondarySfx() const { return m_hShotSecSfx; }
 	SGD::HAudio GetHurtSfx() const { return m_hHurtSfx; }
 	SGD::HAudio GetMeleeSfx() const { return m_hMeleeSfx; }
 	bool GetAlive() const { return m_bALive; }
@@ -45,6 +52,7 @@ public:
 	void SetScore(unsigned int _score) { m_uiPlayerScore = _score; }
 	void SetNumLives(int _lives) { m_uiLives = _lives; }
 	void SetPlayerHP(int _hp) { m_uiPlayerHP = _hp; }
+	void SetSecondarySfx(SGD::HAudio _sfx) { m_hShotSecSfx = _sfx; }
 
 	// helper functions
 	void PlayerInBounds(void);
@@ -55,11 +63,11 @@ private:
 
 	SGD::Rectangle m_rRenderWithWeapon = SGD::Rectangle{ 0, 0, 0, 0 };
 
-	SGD::HAudio m_hHurtSfx, m_hShotBazookaSfx, m_hShotLaserGunSfx, m_hMeleeSfx;
+	SGD::HAudio m_hHurtSfx, m_hShotBazookaSfx, m_hShotSecSfx, m_hMeleeSfx;
 
 	bool m_bALive = true, m_bVictory = false;
 
-	float m_fShotCooldown;
+	float m_fShotCooldown = 0.0f;
 	unsigned int m_uiPlayerScore = 0;
 	int m_uiLives = 3, m_uiPlayerHP = 100;
 };

@@ -13,6 +13,8 @@
 #include "../SGD Wrappers/SGD_AudioManager.h"
 #include "../SGD Wrappers/SGD_String.h"
 #include "../SGD Wrappers/SGD_Utilities.h"
+#include "../SGD Wrappers/SGD_EventManager.h"
+#include "../SGD Wrappers/SGD_MessageManager.h"
 
 #include "BitmapFont.h"
 #include "IGameState.h"
@@ -66,11 +68,12 @@ bool Game::Initialize( void )
 	// (Graphics Manager MUST be first!)
 	if( SGD::GraphicsManager::GetInstance()->Initialize( L"Stardust Crusader", m_szScreenSize, false ) == false
 		|| SGD::InputManager::GetInstance()->Initialize() == false 
-		|| SGD::AudioManager::GetInstance()->Initialize() == false )
+		|| SGD::AudioManager::GetInstance()->Initialize() == false)
 		return false;	// failure!!!
 
 	m_hMainMenuBackground = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_TitleScreen1.png");
-	m_PlayerImg = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_Character1Sprite.png", SGD::Color{ 255, 255, 255, 255 });
+	m_hPlayerImg = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_Character1Sprite.png", SGD::Color{ 255, 255, 255, 255 });
+	m_hEnemyImg = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_EnemyLvl1.png", SGD::Color{ 255, 255, 255, 255 });
 
 	
 // Hide the console window
@@ -108,7 +111,7 @@ int	Game::Update( void )
 	// Try to update the wrappers
 	if( SGD::GraphicsManager::GetInstance()->Update() == false 
 		|| SGD::InputManager::GetInstance()->Update() == false 
-		|| SGD::AudioManager::GetInstance()->Update() == false )
+		|| SGD::AudioManager::GetInstance()->Update() == false)
 		return +1;	// exit when window is closed
 
 
@@ -162,7 +165,9 @@ void Game::Terminate( void )
 	}
 
 	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hMainMenuBackground);
-	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_PlayerImg);
+	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hPlayerImg);
+	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hEnemyImg);
+
 
 
 	// Terminate the SGD wrappers (in reverse order)
