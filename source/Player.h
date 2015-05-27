@@ -40,22 +40,24 @@ public:
 	bool GetAlive() const { return m_bALive; }
 	bool GetVictory() const { return m_bVictory; }
 	float GetShotCooldown() const { return m_fShotCooldown; }
-	unsigned int GetScore() const { return m_uiPlayerScore; }
-	int GetNumLives() const { return m_uiLives; }
-	int GetPlayerHP() const { return m_uiPlayerHP; }
+	int GetScore() const { return m_uiPlayerScore; }
+	int GetNumLives() const { return m_uiPlayerLives; }
+	//int GetPlayerHP() const { return m_uiPlayerHP; }
 
 	// mutators
 	void SetDirection(Direction _dir) { m_dPlayerDir = _dir; }
 	void SetAlive(bool _alive) { m_bALive = _alive; }
 	void SetVictory(bool _victory) { m_bVictory = _victory; }
 	void SetShotCooldown(float _cooldown) { m_fShotCooldown = _cooldown; }
-	void SetScore(unsigned int _score) { m_uiPlayerScore = _score; }
-	void SetNumLives(int _lives) { m_uiLives = _lives; }
-	void SetPlayerHP(int _hp) { m_uiPlayerHP = _hp; }
+	void SetScore(int _score) { m_uiPlayerScore = _score; }
+	void SetNumLives(int _lives) { m_uiPlayerLives = _lives; }
+//	void SetPlayerHP(int _hp) { m_uiPlayerHP = _hp; }
 	void SetSecondarySfx(SGD::HAudio _sfx) { m_hShotSecSfx = _sfx; }
 
 	// helper functions
 	void PlayerInBounds(void);
+
+	void HandleCollision(const IEntity* pOther);
 
 private:
 	
@@ -68,7 +70,7 @@ private:
 	bool m_bALive = true, m_bVictory = false;
 
 	float m_fShotCooldown = 0.0f;
-	unsigned int m_uiPlayerScore = 0;
-	int m_uiLives = 3, m_uiPlayerHP = 100;
+	int m_uiPlayerScore = 0;
+	unsigned int m_uiPlayerLives = 1;
 };
 

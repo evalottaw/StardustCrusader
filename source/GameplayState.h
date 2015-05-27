@@ -52,6 +52,8 @@ public:
 	SGD::HTexture GetLevelBackground(int _level);
 	SGD::HTexture GetEnemyImg(void) const { return m_hEnemyImgL1; }
 	SGD::HAudio GetSecShotSfx(void) const { return m_hProjectileSecSfx; }
+	bool IsGameLost() const { return m_bGameLost; }
+	void SetGameLost(bool _lost) { m_bGameLost = _lost; }
 	bool IsGamePaused() const { return m_bisGamePaused; }
 	bool Pause(void);
 
@@ -82,10 +84,17 @@ private:
 
 	SGD::HAudio m_hProjectileSecSfx = SGD::INVALID_HANDLE;
 	SGD::HAudio m_hBackgroundMus = SGD::INVALID_HANDLE;
+	SGD::HAudio m_hEnemyHitSfx = SGD::INVALID_HANDLE;
 
 
-	Player* m_pPlayer;
+	Entity* m_pPlayer;
 	bool m_bisGamePaused = false, m_bisKeyPressed = false;
-	bool playBackgMus = true;
+	bool playBackgMus = true, m_bGameLost = false;;
 	int m_iCursor = 0;
+
+	
+
+	// helper
+	void DrawPlayerScore(void);
+	void HoldEnemyCreation(int _level);
 };

@@ -131,6 +131,7 @@ int	Game::Update( void )
 	{
 		m_bIsFullscreenToggled = !m_bIsFullscreenToggled;
 		SGD::GraphicsManager::GetInstance()->Resize(m_szScreenSize, m_bIsFullscreenToggled);
+		return 0;
 	}
 
 	

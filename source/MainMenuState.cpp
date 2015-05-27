@@ -81,15 +81,10 @@
 	}
 
 
-	// for fullscreen
-	if (pInput->IsKeyPressed(SGD::Key::Alt)
-		&& pInput->IsKeyPressed(SGD::Key::Enter))
-	{
-		
-	}
 
 	// Select an option?
-	if( pInput->IsKeyPressed( SGD::Key::Enter ) == true )
+	if( pInput->IsKeyPressed( SGD::Key::Enter ) == true
+		&& pInput->IsKeyDown(SGD::Key::Alt) == false)
 	{
 		// Which option is chosen?
 		if( m_nCursor == 0 )

@@ -10,6 +10,7 @@
 #include "AnchorPointAnimation.h"
 #include "MessageID.h"
 #include "CreateBulletMessage.h"
+#include "Enemy.h"
 
 
 #include "../SGD Wrappers/SGD_Message.h"
@@ -23,14 +24,14 @@
 
 
 
-#define PRIMARY_SHOT_DELAY 1.5
 #define SECONDARY_SHOT_DELAY 0.35
-#define MELEE_DELAY 1.0
 
 
 Player::Player()
 {
 	SetImage(Game::GetInstance()->GetPlayerImg());
+	RegisterForEvent("ENEMY_DESTROYED");
+	RegisterForEvent("GAME_OVER");
 }
 
 
@@ -55,9 +56,14 @@ void Player::Update(float _elapsedTime)
 			m_ptPosition.x = GetPosition().x - GetVelocity().x;
 			SetDirection(LEFT);
 		}
-		if ((SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::MouseLeft)
+		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::W))
+			m_ptPosition.y = GetPosition().y - GetVelocity().y;
+		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::S))
+			m_ptPosition.y = GetPosition().y + GetVelocity().y;
+
+		if ((SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Spacebar)
 			&& m_fShotCooldown > SECONDARY_SHOT_DELAY) 
-			|| (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::MouseLeft)
+			|| (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::Spacebar)
 			&& m_fShotCooldown > SECONDARY_SHOT_DELAY))
 		{
 			SGD::AudioManager::GetInstance()->PlayAudio(GetSecondarySfx(), false);
@@ -67,10 +73,7 @@ void Player::Update(float _elapsedTime)
 			
 		}
 
-		if (GetNumLives() <= 0)
-		{
-			SetAlive(false);
-		}
+		
 	}
 
 	PlayerInBounds();
@@ -97,23 +100,28 @@ void Player::PlayerInBounds(void)
 		m_ptPosition.x = Game::GetInstance()->GetScreenSize().width - GetSize().width * 2.5f;
 	if (GetPosition().y <= 0)
 		m_ptPosition.y = 0;
-	if (GetPosition().y > Game::GetInstance()->GetScreenSize().height * 2.5f)
-		m_ptPosition.y = Game::GetInstance()->GetScreenSize().height * 2.5f;
+	if (GetPosition().y > Game::GetInstance()->GetScreenSize().height - GetSize().height * 2.5f)
+		m_ptPosition.y = Game::GetInstance()->GetScreenSize().height - GetSize().height * 2.5f;
 }
 
 void Player::HandleEvent(const SGD::Event* pEvent)
 {
-	if (pEvent->GetEventID() == "PLAYER_HIT")
+	if (pEvent->GetEventID() == "ENEMY_DESTROYED")
 	{
-		SetNumLives(GetNumLives() - 1);
-
+		SetScore(GetScore() + 50);
 	}
-
-	if (GetNumLives() <= 0)
+	else if (pEvent->GetEventID() == "GAME_OVER")
 	{
 		SetAlive(false);
-		SetSpeed(0.0f);
-		SGD::Event* Event = new SGD::Event("PLAYER_DEAD", nullptr, this);
-		SGD::EventManager::GetInstance()->QueueEvent(Event);
+	}
+	
+}
+
+void Player::HandleCollision(const IEntity* pOther)
+{
+	if (pOther->GetType() == ENT_ENEMY)
+	{
+		SetAlive(false);
+		SetNumLives(0);
 	}
 }

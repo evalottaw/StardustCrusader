@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		IGameState.h
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	IGameState interface class is the base for all
 //				game states / menu screens
 //*********************************************************************//

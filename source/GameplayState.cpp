@@ -17,6 +17,7 @@
 #include "Boss.h"
 #include "Projectile.h"
 #include "CreateBulletMessage.h"
+#include "DestroyEntityMessage.h"
 
 #include "../SGD Wrappers/SGD_AudioManager.h"
 #include "../SGD Wrappers/SGD_GraphicsManager.h"
@@ -33,7 +34,8 @@
 #include <Windows.h>
 #include <cstdlib>
 #include <cassert>
-
+#include <vector>
+#include <string.h>
 
 //*********************************************************************//
 // GetInstance
@@ -64,24 +66,20 @@
 	// loads sfx + background music
 	m_hProjectileSecSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_SecondaryShotSfx.wav");
 	m_hBackgroundMus = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_BackgroundMusic.xwm");
-
+	m_hEnemyHitSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_EnemyHitSfx.wav");
 	// plays background music looping
 	SGD::AudioManager::GetInstance()->PlayAudio(m_hBackgroundMus, playBackgMus);
 
 	// Allocate the Entity Manager
 	m_pEntities = new EntityManager;
 
-
-	Entity* player = CreatePlayer();
-	Entity* enemy = CreateLvl1Enemy();
 	
-
-	m_pEntities->AddEntity(player, 0);
-	m_pEntities->AddEntity(enemy, 0);
-
+	m_pPlayer = CreatePlayer();
+	m_pEntities->AddEntity(m_pPlayer, 0);
 	
-	player->Release();
-	enemy->Release();
+	// made switch function for future levels
+	HoldEnemyCreation(1);
+
 }
 
 
@@ -92,7 +90,7 @@
 /*virtual*/ void GameplayState::Exit( void )	/*override*/
 {
 
-
+	m_pPlayer->Release();
 
 
 	// Release game entities
@@ -110,6 +108,8 @@
 	// unloads audio
 	SGD::AudioManager::GetInstance()->UnloadAudio(m_hProjectileSecSfx);
 	SGD::AudioManager::GetInstance()->UnloadAudio(m_hBackgroundMus);
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hEnemyHitSfx);
+
 	
 
 
@@ -159,7 +159,7 @@
 	
 	// Update the entities
 	m_pEntities->UpdateAll( elapsedTime );
-	
+	m_pEntities->CheckCollisions(0, 1);
 
 	
 	// Process the Event Manager
@@ -184,8 +184,7 @@
 	BitmapFont* font = Game::GetInstance()->GetFont();
 
 	font->Draw("Kill all enemies to advance", SGD::Point{ 2, 2 }, 0.7f, SGD::Color{ 255, 0, 0, 255 });
-	
-
+	DrawPlayerScore();
 	
 
 	// Render the entities
@@ -193,10 +192,10 @@
 	// draws the pause menu
 	if (m_bisGamePaused)
 	{
-		font->Draw("Pause", SGD::Point{ 300, 250 }, 1.5f);
-		font->Draw("Resume", SGD::Point{ 300, 400 }, 1.0f);
-		font->Draw("Quit", SGD::Point{ 300, 450 }, 1.0f);
-		font->Draw("0", SGD::Point{ 250, 400.0f + 50.0f * m_iCursor }, 1.0f);
+		font->Draw("Pause", SGD::Point{ 400, 250 }, 1.5f);
+		font->Draw("Resume", SGD::Point{ 400, 400 }, 1.0f);
+		font->Draw("Quit", SGD::Point{ 400, 450 }, 1.0f);
+		font->Draw("0", SGD::Point{ 350, 400.0f + 50.0f * m_iCursor }, 1.0f);
 	}
 
 	
@@ -231,7 +230,9 @@
 		break;
 	case MessageID::MSG_DESTROY_ENTITY:
 		{
-
+		const DestroyEntityMessage* destroy = dynamic_cast<const DestroyEntityMessage*>(pMsg);
+		Entity* entity = destroy->GetEntity();
+		GameplayState::GetInstance()->m_pEntities->RemoveEntity(entity);
 		}
 		break;
 	default:
@@ -252,10 +253,10 @@ Entity* GameplayState::CreatePlayer(void)
 	player->SetVictory(false);
 	player->SetPosition(SGD::Point{ 0, Game::GetInstance()->GetScreenSize().height - 105});
 	player->SetSize(SGD::Size{ 32, 32 });
-	player->SetVelocity(SGD::Vector{ 0.7f, 0 });
+	player->SetVelocity(SGD::Vector{ 0.4f, 0.4f });
 	player->SetSecondarySfx(m_hProjectileSecSfx);
 	player->SetScore(0);
-	player->SetNumLives(3);
+	player->SetNumLives(1);
 	
 	
 
@@ -267,10 +268,11 @@ Entity* GameplayState::CreateLvl1Enemy(void)
 	Enemy* enemy = new Enemy;
 	enemy->SetImage(m_hEnemyImgL1);
 	enemy->SetSize(SGD::Size{ 64, 80 });
-	enemy->SetVelocity(SGD::Vector{ 0.2f, 0 });
-	enemy->SetPosition(SGD::Point{ Game::GetInstance()->GetScreenSize().width,
-		Game::GetInstance()->GetScreenSize().height - 180 });
-	
+	enemy->SetVelocity(SGD::Vector{ 0.1f, 0 });
+	enemy->SetPosition(SGD::Point{ Game::GetInstance()->GetScreenSize().width, 
+		(float)(rand() % (int)(Game::GetInstance()->GetScreenSize().height)) });
+	enemy->SetNumHitsTaken(0);
+	enemy->SetEnemyHitSfx(m_hEnemyHitSfx);
 	return enemy;
 }
 
@@ -285,9 +287,9 @@ Entity* GameplayState::CreateProjectile(Entity* entity)
 
 	SGD::Vector vel = SGD::Vector{ 1, 0 };
 	if (entity->GetSpeed() > 0)
-		vel *= 150 + entity->GetSpeed();
+		vel *= 250 + entity->GetSpeed();
 	else
-		vel *= 150;
+		vel *= 250;
 
 	vel.Rotate(projectile->GetRotation());
 	projectile->SetVelocity(vel);
@@ -323,7 +325,7 @@ bool GameplayState::Pause(void)
 			m_iCursor = 1;
 	}
 
-	// not working! should resume game =(
+	// resumes game when exit is pressed second time
 	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Escape)
 		&& !m_bisKeyPressed)
 	{
@@ -356,4 +358,37 @@ bool GameplayState::Pause(void)
 	}
 
 	return false;
+}
+
+void GameplayState::DrawPlayerScore(void)
+{
+	
+
+	BitmapFont* font = Game::GetInstance()->GetFont();
+	std::string tempString = std::to_string(dynamic_cast<Player*>(m_pPlayer)->GetScore());
+	const char* ch = tempString.c_str();
+	font->Draw("Score: ", SGD::Point{ 370, 35 }, 0.8f);
+	font->Draw(ch, SGD::Point{ 530, 35 }, 0.8f);
+
+
+}
+
+void GameplayState::HoldEnemyCreation(int _level)
+{
+	switch (_level)
+	{
+	case 1:
+	{
+		for (size_t i = 0; i < 6; i++)
+		{
+			Entity* enemy = CreateLvl1Enemy();
+			m_pEntities->AddEntity(enemy, 0);
+			enemy->Release();
+		}
+	
+	}
+	default:
+		break;
+	}
+	
 }

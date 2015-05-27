@@ -14,5 +14,9 @@ public:
 
 	bool Update(float elapsedTime);
 	void Render(float elapsedTime);
+
+private:
+
+	float m_fScrollCreditsAm = 0;
 };
 

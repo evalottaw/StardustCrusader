@@ -16,6 +16,7 @@ Projectile::Projectile()
 
 Projectile::~Projectile()
 {
+	if (m_etProjectileOwner != nullptr)
 	m_etProjectileOwner->Release();
 }
 
