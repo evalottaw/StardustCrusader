@@ -34,6 +34,7 @@ public:
 	//*****************************************************************//
 	// Singleton Accessor:
 	static GameplayState* GetInstance( void );
+	static void  DeleteInstance(void);
 
 	
 	//*****************************************************************//
@@ -46,12 +47,13 @@ public:
 
 
 	Entity* CreatePlayer(void);
-	Entity* CreateLvl1Enemy(void);
+	Entity* CreateLvl1Enemy(int _y);
 	Entity* CreateProjectile(Entity* entity);
 
 	SGD::HTexture GetLevelBackground(int _level);
 	SGD::HTexture GetEnemyImg(void) const { return m_hEnemyImgL1; }
 	SGD::HAudio GetSecShotSfx(void) const { return m_hProjectileSecSfx; }
+	SGD::HAudio GetGameOverSfx(void) const { return m_hGameOverSfx; }
 	bool IsGameLost() const { return m_bGameLost; }
 	void SetGameLost(bool _lost) { m_bGameLost = _lost; }
 	bool IsGamePaused() const { return m_bisGamePaused; }
@@ -67,7 +69,8 @@ private:
 	GameplayState( const GameplayState& )				= delete;	// copy constructor
 	GameplayState& operator= ( const GameplayState& )	= delete;	// assignment operator
 		
-	
+	static GameplayState* s_pInstance;
+
 	//*****************************************************************//
 	// Game Entities
 	EntityManager*	m_pEntities			= nullptr;
@@ -85,16 +88,21 @@ private:
 	SGD::HAudio m_hProjectileSecSfx = SGD::INVALID_HANDLE;
 	SGD::HAudio m_hBackgroundMus = SGD::INVALID_HANDLE;
 	SGD::HAudio m_hEnemyHitSfx = SGD::INVALID_HANDLE;
+	SGD::HAudio m_hGameOverSfx = SGD::INVALID_HANDLE;
 
 
 	Entity* m_pPlayer;
 	bool m_bisGamePaused = false, m_bisKeyPressed = false;
-	bool playBackgMus = true, m_bGameLost = false;;
+	bool playBackgMus = true, m_bGameLost = false, m_bPlayGameOverSfx = true, m_bPlayWinSfx = true;
 	int m_iCursor = 0;
+	float m_fWait = 4.0f;
 
 	
 
 	// helper
 	void DrawPlayerScore(void);
+	void DrawEnemiesLeft(void);
 	void HoldEnemyCreation(int _level);
+	bool GameIsLost(float time);
+	bool GameIsWon(float time);
 };

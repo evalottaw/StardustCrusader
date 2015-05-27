@@ -57,7 +57,6 @@ public:
 	// helper functions
 	void PlayerInBounds(void);
 
-	void HandleCollision(const IEntity* pOther);
 
 private:
 	

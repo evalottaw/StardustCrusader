@@ -60,8 +60,15 @@ public:
 	SGD::HTexture GetMenuBackground() const { return m_hMainMenuBackground; }
 	SGD::HTexture GetPlayerImg() const { return m_hPlayerImg; }
 	SGD::HTexture GetEnemyImg() const { return m_hEnemyImg; }
+	bool IsGameLost() const { return m_bisGameLost; }
+	bool IsGameWon() const { return m_bisVictory; }
+
+	int GetNumEnemies() const { return m_iNumEnemies; }
 
 
+	void SetGameLost(bool _lost) { m_bisGameLost = _lost; }
+	void SetVictory(bool _vic) { m_bisVictory = _vic; }
+	void SetNumEnemies() {-- m_iNumEnemies; }
 	
 private:
 	//*****************************************************************//
@@ -104,5 +111,9 @@ private:
 
 	bool m_bIsFullscreenToggled = true;
 	bool m_bIsKeyPressed = false;
+	bool m_bisGameLost = false;
+	bool m_bisVictory = false;
+
+	int m_iNumEnemies = 5;
 
 };

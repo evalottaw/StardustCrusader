@@ -15,18 +15,24 @@
 #include "OptionsState.h"
 #include "CreditsState.h"
 
+MainMenuState* MainMenuState::s_pInstance = nullptr;
 
 //*********************************************************************//
 // GetInstance
 //	- create & return THE singleton object
 /*static*/ MainMenuState* MainMenuState::GetInstance( void )
 {
-	static MainMenuState s_Instance;
-
-	return &s_Instance;
+	
+	if (s_pInstance == nullptr)
+		s_pInstance = new MainMenuState;
+	return s_pInstance;
 }
 
-
+void MainMenuState::DeleteInstance(void)
+{
+	delete s_pInstance;
+	s_pInstance = nullptr;
+}
 //*********************************************************************//
 // Enter
 //	- called EACH time the screen is shown/switched to
@@ -36,6 +42,8 @@
 	// Reset the cursor to the top
 	// (commented out to keep the last cursor position)
 	//m_nCursor = 0;
+	Game::GetInstance()->SetGameLost(false);
+	Game::GetInstance()->SetVictory(false);
 }
 
 //*********************************************************************//
@@ -44,6 +52,8 @@
 //	- unload resources
 /*virtual*/ void MainMenuState::Exit( void )		/*override*/
 {
+	MainMenuState::GetInstance()->DeleteInstance();
+
 }
 
 

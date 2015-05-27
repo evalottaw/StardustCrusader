@@ -12,21 +12,22 @@
 #include "../SGD Wrappers/SGD_EventManager.h"
 
 
-HowToPlayState::HowToPlayState()
-{
-}
+HowToPlayState* HowToPlayState::s_pInstance = nullptr;
 
-
-HowToPlayState::~HowToPlayState()
-{
-}
 
 HowToPlayState* HowToPlayState::GetInstance(void)
 {
-	static HowToPlayState s_Instance;
-	return &s_Instance;
+	if (s_pInstance == nullptr)
+		s_pInstance = new HowToPlayState;
+
+	return s_pInstance;
 }
 
+void HowToPlayState::DeleteInstance(void)
+{
+	delete s_pInstance;
+	s_pInstance = nullptr;
+}
 
 void HowToPlayState::Enter(void)
 {
@@ -35,7 +36,7 @@ void HowToPlayState::Enter(void)
 
 void HowToPlayState::Exit(void)
 {
-	
+	HowToPlayState::GetInstance()->DeleteInstance();
 }
 	 
 bool HowToPlayState::Update(float elapsedTime)

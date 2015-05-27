@@ -44,22 +44,24 @@ void Player::Update(float _elapsedTime)
 	m_fShotCooldown += _elapsedTime;
 	
 
-	if (!GameplayState::GetInstance()->IsGamePaused())
+	if (!GameplayState::GetInstance()->IsGamePaused()
+		&& !Game::GetInstance()->IsGameWon()
+		&& !Game::GetInstance()->IsGameLost())
 	{
 		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::D))
 		{
-			m_ptPosition.x = GetPosition().x + GetVelocity().x;
+			m_ptPosition.x = GetPosition().x + GetVelocity().x * _elapsedTime * 60;
 			SetDirection(RIGHT);
 		}
 		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::A))
 		{
-			m_ptPosition.x = GetPosition().x - GetVelocity().x;
+			m_ptPosition.x = GetPosition().x - GetVelocity().x * _elapsedTime * 60;
 			SetDirection(LEFT);
 		}
 		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::W))
-			m_ptPosition.y = GetPosition().y - GetVelocity().y;
+			m_ptPosition.y = GetPosition().y - GetVelocity().y * _elapsedTime * 60;
 		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::S))
-			m_ptPosition.y = GetPosition().y + GetVelocity().y;
+			m_ptPosition.y = GetPosition().y + GetVelocity().y * _elapsedTime * 60;
 
 		if ((SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Spacebar)
 			&& m_fShotCooldown > SECONDARY_SHOT_DELAY) 
@@ -72,6 +74,8 @@ void Player::Update(float _elapsedTime)
 			message->QueueMessage();
 			
 		}
+
+		
 
 		
 	}
@@ -113,15 +117,8 @@ void Player::HandleEvent(const SGD::Event* pEvent)
 	else if (pEvent->GetEventID() == "GAME_OVER")
 	{
 		SetAlive(false);
+		GameplayState::GetInstance()->SetGameLost(true);
 	}
 	
 }
 
-void Player::HandleCollision(const IEntity* pOther)
-{
-	if (pOther->GetType() == ENT_ENEMY)
-	{
-		SetAlive(false);
-		SetNumLives(0);
-	}
-}

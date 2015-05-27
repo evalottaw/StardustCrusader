@@ -2,36 +2,47 @@
 #include "MainMenuState.h"
 #include "Game.h"
 #include "BitmapFont.h"
+#include "GameplayState.h"
 
 #include "../SGD Wrappers/SGD_GraphicsManager.h"
 #include "../SGD Wrappers/SGD_InputManager.h"
 
+CreditsState* CreditsState::s_pInstance = nullptr;
 
-CreditsState::CreditsState()
-{
-}
-
-
-CreditsState::~CreditsState()
-{
-}
 
 CreditsState* CreditsState::GetInstance(void)
 {
-	static CreditsState s_instance;
-	return &s_instance;
+	if (s_pInstance == nullptr)
+		s_pInstance = new CreditsState;
+	return s_pInstance;
+}
+
+void CreditsState::DeleteInstance(void)
+{
+	delete s_pInstance;
+	s_pInstance = nullptr;
 }
 
 void CreditsState::Enter(void)
 {
-
+	
+	
 }
 void CreditsState::Exit(void)
 {
+	CreditsState::GetInstance()->DeleteInstance();
 
 }
 bool CreditsState::Update(float elapsedTime)
 {
+	if (Game::GetInstance()->IsGameLost()
+		|| Game::GetInstance()->IsGameWon())
+	{
+		m_fWait -= elapsedTime;
+		if (m_fWait <= 0)
+			Game::GetInstance()->ChangeState(MainMenuState::GetInstance());
+	}
+	
 
 	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Escape))
 	{

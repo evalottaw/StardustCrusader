@@ -20,6 +20,7 @@ public:
 	//*****************************************************************//
 	// Singleton Accessor:
 	static MainMenuState* GetInstance( void );
+	static void  DeleteInstance(void);
 
 	
 	//*****************************************************************//
@@ -41,7 +42,7 @@ private:
 	MainMenuState( const MainMenuState& )				= delete;	// copy constructor
 	MainMenuState& operator= ( const MainMenuState& )	= delete;	// assignment operator
 
-
+	static MainMenuState* s_pInstance;
 	//*****************************************************************//
 	// cursor index / position
 	int m_nCursor = 0;

@@ -18,6 +18,7 @@
 #include "Projectile.h"
 #include "CreateBulletMessage.h"
 #include "DestroyEntityMessage.h"
+#include "CreditsState.h"
 
 #include "../SGD Wrappers/SGD_AudioManager.h"
 #include "../SGD Wrappers/SGD_GraphicsManager.h"
@@ -37,16 +38,23 @@
 #include <vector>
 #include <string.h>
 
+GameplayState* GameplayState::s_pInstance = nullptr;
 //*********************************************************************//
 // GetInstance
 //	- allocate static global instance
 //	- return THE instance
 /*static*/ GameplayState* GameplayState::GetInstance( void )
 {
-	static GameplayState s_Instance;	// stored in global memory once
-	return &s_Instance;
+	if (s_pInstance == nullptr)
+		s_pInstance = new GameplayState;
+	return s_pInstance;
 }
 
+void GameplayState::DeleteInstance(void)
+{
+	delete s_pInstance;
+	s_pInstance = nullptr;
+}
 
 //*********************************************************************//
 // Enter
@@ -55,6 +63,8 @@
 //	- allocate & initialize game entities
 /*virtual*/ void GameplayState::Enter( void )	/*override*/
 {
+
+	
 	// Initialize the Event & Message Managers
 	SGD::EventManager::GetInstance()->Initialize();
 	SGD::MessageManager::GetInstance()->Initialize( &GameplayState::MessageProc );
@@ -67,6 +77,7 @@
 	m_hProjectileSecSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_SecondaryShotSfx.wav");
 	m_hBackgroundMus = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_BackgroundMusic.xwm");
 	m_hEnemyHitSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_EnemyHitSfx.wav");
+	m_hGameOverSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_GameOverSfx.wav");
 	// plays background music looping
 	SGD::AudioManager::GetInstance()->PlayAudio(m_hBackgroundMus, playBackgMus);
 
@@ -79,6 +90,7 @@
 	
 	// made switch function for future levels
 	HoldEnemyCreation(1);
+
 
 }
 
@@ -109,8 +121,11 @@
 	SGD::AudioManager::GetInstance()->UnloadAudio(m_hProjectileSecSfx);
 	SGD::AudioManager::GetInstance()->UnloadAudio(m_hBackgroundMus);
 	SGD::AudioManager::GetInstance()->UnloadAudio(m_hEnemyHitSfx);
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hGameOverSfx);
 
-	
+
+	GameplayState::GetInstance()->DeleteInstance();
+
 
 
 
@@ -131,7 +146,9 @@
 	SGD::InputManager* pInput = SGD::InputManager::GetInstance();
 	
 	// Press Escape to return to MainMenuState
-	if( pInput->IsKeyPressed( SGD::Key::Escape ) == true )
+	if( pInput->IsKeyPressed( SGD::Key::Escape ) == true 
+		&& !Game::GetInstance()->IsGameWon()
+		&& !Game::GetInstance()->IsGameLost())
 	{
 		// ChangeState is VERY VOLATILE!!!
 		//	- can only be safely called by a game state's
@@ -140,8 +157,6 @@
 
 		m_bisGamePaused = !m_bisGamePaused;
 		m_bisKeyPressed = true;  
-		
-		
 		// Exit this state immediately
 		//return true;	// keep playing in the new state
 	}
@@ -153,16 +168,32 @@
 			return true;
 		}
 	}
+	
+	if (IsGameLost())
+	{
 		
-	
-	
+		if (GameIsLost(elapsedTime))
+		{
+			return true;
+		}
+			
+		
+			
+	}
+	else if (Game::GetInstance()->IsGameWon())
+	{
+		if (GameIsWon(elapsedTime))
+		{
+			return true;
+		}
+	}
 	
 	// Update the entities
 	m_pEntities->UpdateAll( elapsedTime );
-	m_pEntities->CheckCollisions(0, 1);
+	m_pEntities->CheckCollisions(1, 2);
 
 	
-	// Process the Event Manager
+	// Process the Event Manageraws
 	//	- all the events will be sent to the registered IListeners' HandleEvent methods
 	SGD::EventManager::GetInstance()->Update();
 
@@ -185,7 +216,7 @@
 
 	font->Draw("Kill all enemies to advance", SGD::Point{ 2, 2 }, 0.7f, SGD::Color{ 255, 0, 0, 255 });
 	DrawPlayerScore();
-	
+	DrawEnemiesLeft();
 
 	// Render the entities
 	m_pEntities->RenderAll();
@@ -197,6 +228,11 @@
 		font->Draw("Quit", SGD::Point{ 400, 450 }, 1.0f);
 		font->Draw("0", SGD::Point{ 350, 400.0f + 50.0f * m_iCursor }, 1.0f);
 	}
+
+	if (IsGameLost())
+		font->Draw("Game Over", SGD::Point{ 400, 400 }, 1.0f);
+	else if (Game::GetInstance()->IsGameWon())
+		font->Draw("You Won", SGD::Point{ 400, 400 }, 1.0f);
 
 	
 
@@ -224,7 +260,7 @@
 			const CreateBulletMessage* message = dynamic_cast<const CreateBulletMessage*>(pMsg);
 			Entity* enemy = message->GetBulletOwner();
 			Entity* entity = GameplayState::GetInstance()->CreateProjectile(enemy);
-			GameplayState::GetInstance()->m_pEntities->AddEntity(entity, 1);
+			GameplayState::GetInstance()->m_pEntities->AddEntity(entity, 2);
 			entity->Release(); GameplayState::GetInstance()->m_pEntities->AddEntity(entity, 2);
 		}
 		break;
@@ -253,7 +289,7 @@ Entity* GameplayState::CreatePlayer(void)
 	player->SetVictory(false);
 	player->SetPosition(SGD::Point{ 0, Game::GetInstance()->GetScreenSize().height - 105});
 	player->SetSize(SGD::Size{ 32, 32 });
-	player->SetVelocity(SGD::Vector{ 0.4f, 0.4f });
+	player->SetVelocity(SGD::Vector{ 1.5f, 1.5f });
 	player->SetSecondarySfx(m_hProjectileSecSfx);
 	player->SetScore(0);
 	player->SetNumLives(1);
@@ -263,14 +299,13 @@ Entity* GameplayState::CreatePlayer(void)
 	return player;
 }
 
-Entity* GameplayState::CreateLvl1Enemy(void)
+Entity* GameplayState::CreateLvl1Enemy(int _y)
 {
 	Enemy* enemy = new Enemy;
 	enemy->SetImage(m_hEnemyImgL1);
 	enemy->SetSize(SGD::Size{ 64, 80 });
-	enemy->SetVelocity(SGD::Vector{ 0.1f, 0 });
-	enemy->SetPosition(SGD::Point{ Game::GetInstance()->GetScreenSize().width, 
-		(float)(rand() % (int)(Game::GetInstance()->GetScreenSize().height)) });
+	enemy->SetVelocity(SGD::Vector{ 0.4f, 0 });
+	enemy->SetPosition(SGD::Point{ Game::GetInstance()->GetScreenSize().width, _y * enemy->GetSize().height * 1.5f });
 	enemy->SetNumHitsTaken(0);
 	enemy->SetEnemyHitSfx(m_hEnemyHitSfx);
 	return enemy;
@@ -367,22 +402,30 @@ void GameplayState::DrawPlayerScore(void)
 	BitmapFont* font = Game::GetInstance()->GetFont();
 	std::string tempString = std::to_string(dynamic_cast<Player*>(m_pPlayer)->GetScore());
 	const char* ch = tempString.c_str();
-	font->Draw("Score: ", SGD::Point{ 370, 35 }, 0.8f);
-	font->Draw(ch, SGD::Point{ 530, 35 }, 0.8f);
+	font->Draw("Score: ", SGD::Point{ 70, 740 }, 0.8f);
+	font->Draw(ch, SGD::Point{ 230, 740 }, 0.8f);
 
 
 }
 
+void GameplayState::DrawEnemiesLeft(void)
+{
+	BitmapFont* font = Game::GetInstance()->GetFont();
+	std::string tempString = std::to_string(Game::GetInstance()->GetNumEnemies());
+	const char* numEnemies = tempString.c_str();
+	font->Draw("Enemies left: ", SGD::Point{ 300, 740 }, 0.8f);
+	font->Draw(numEnemies, SGD::Point{ 630, 740 }, 0.8f);
+}
 void GameplayState::HoldEnemyCreation(int _level)
 {
 	switch (_level)
 	{
 	case 1:
 	{
-		for (size_t i = 0; i < 6; i++)
+		for (size_t i = 0; i < 5; i++)
 		{
-			Entity* enemy = CreateLvl1Enemy();
-			m_pEntities->AddEntity(enemy, 0);
+			Entity* enemy = CreateLvl1Enemy(i);
+			m_pEntities->AddEntity(enemy, 1);
 			enemy->Release();
 		}
 	
@@ -391,4 +434,50 @@ void GameplayState::HoldEnemyCreation(int _level)
 		break;
 	}
 	
+}
+
+bool GameplayState::GameIsLost(float time)
+{
+	m_fWait -= time;
+
+	if (m_bPlayGameOverSfx)
+	{
+		SGD::AudioManager::GetInstance()->StopAudio(m_hBackgroundMus);
+		SGD::AudioManager::GetInstance()->PlayAudio(GetGameOverSfx(), false);
+		Game::GetInstance()->SetGameLost(true);
+		m_bPlayGameOverSfx = false;
+	}
+
+	
+	if (m_fWait <= 0)
+	{
+		
+		Game::GetInstance()->ChangeState(CreditsState::GetInstance());
+		return true;
+	}
+
+	return false;
+}
+
+bool GameplayState::GameIsWon(float time)
+{
+	m_fWait -= time;
+
+	if (m_bPlayWinSfx)
+	{
+		SGD::AudioManager::GetInstance()->StopAudio(m_hBackgroundMus);
+		SGD::AudioManager::GetInstance()->PlayAudio(GetGameOverSfx(), false);
+
+		m_bPlayWinSfx = false;
+	}
+
+
+	if (m_fWait <= 0)
+	{
+
+		Game::GetInstance()->ChangeState(CreditsState::GetInstance());
+		return true;
+	}
+
+	return false;
 }

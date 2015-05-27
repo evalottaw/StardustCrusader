@@ -22,7 +22,6 @@ public:
 	void SetEnemyHitSfx(SGD::HAudio _sfx) { m_hEnemyHitSfx = _sfx; }
 
 	void HandleEvent(const SGD::Event* pEvent);
-	void HandleCollision(const IEntity* pOther);
 
 	void KeepEnemyInBounds();
 private:

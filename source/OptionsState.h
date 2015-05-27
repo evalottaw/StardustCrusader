@@ -8,6 +8,7 @@ public:
 	~OptionsState();
 
 	static OptionsState* GetInstance(void);
+	static void  DeleteInstance(void);
 
 	void Enter(void);
 	void Exit(void);

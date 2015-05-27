@@ -34,13 +34,12 @@ void Enemy::Update(float elapsedTime)
 		&& !GameplayState::GetInstance()->IsGameLost())
 	{
 		
-			SetPosition(SGD::Point{ GetPosition().x - GetVelocity().x, GetPosition().y });
-			if (GetPosition().x <= 0 + GetSize().width)
+			SetPosition(SGD::Point{ GetPosition().x - GetVelocity().x * elapsedTime * 60, GetPosition().y });
+			if (GetPosition().x <= 0 + GetSize().width * 1.5f)
 			{
-				m_ptPosition.x = GetSize().width * 2.0f; 
-				// IF IT GETS HERE THE GAME IS OVER
-				// FIND A GOOD WAY TO MAKE IT PAUSE AND DISPLAY TEXT + AUDIO
-				GameplayState::GetInstance()->SetGameLost(true);
+				m_ptPosition.x = GetSize().width * 1.5f; 
+				SGD::Event* Event = new SGD::Event("GAME_OVER", nullptr, this);
+				SGD::EventManager::GetInstance()->QueueEvent(Event);
 			}
 
 			if (GetNumHitsTaken() >= 3)
@@ -49,8 +48,13 @@ void Enemy::Update(float elapsedTime)
 				SGD::EventManager::GetInstance()->QueueEvent(Event);
 				DestroyEntityMessage* msg = new DestroyEntityMessage(this);
 				msg->QueueMessage();
+				Game::GetInstance()->SetNumEnemies();
+				if (Game::GetInstance()->GetNumEnemies() <= 0)
+					Game::GetInstance()->SetVictory(true);
 				SetNumHitsTaken(0);
 			}
+
+			
 
 			KeepEnemyInBounds();
 	}
@@ -66,15 +70,7 @@ void Enemy::HandleEvent(const SGD::Event* pEvent)
 	
 }
 
-void Enemy::HandleCollision(const IEntity* pOther)
-{
-	if (pOther->GetType() == ENT_PLAYER)
-	{
-		SGD::Event* Event = new SGD::Event("GAME_OVER", nullptr, this);
-		SGD::EventManager::GetInstance()->QueueEvent(Event);
-	}
-	
-}
+
 void Enemy::KeepEnemyInBounds()
 {
 	if (GetPosition().x <= 0)
