@@ -1,11 +1,16 @@
+//*********************************************************************//
+//	File:		OptionsState.h
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Handles the Options State functionality
+//*********************************************************************//
 #pragma once
 #include "IGameState.h"
 class OptionsState :
 	public IGameState
 {
 public:
-	OptionsState();
-	~OptionsState();
+	
 
 	static OptionsState* GetInstance(void);
 	static void  DeleteInstance(void);
@@ -16,18 +21,33 @@ public:
 	bool Update(float elapsedTime);
 	void Render(float elapsedTime);
 
-	// access
-	int GetMusicVolume() const { return m_uiMusicVol; }
-	int GetSfxVolume() const { return m_uiSfxVol; }
-
-	// mutate
-	void SetMusicVolume(int _vol) { m_uiMusicVol = _vol; }
-	void SetSfxVolume(int _vol) { m_uiSfxVol = _vol; }
+	
+	void ReadInVolume();
 
 
 private:
 
-	int m_uiMusicVol = 25, m_uiSfxVol = 25;
+	OptionsState() = default;
+	~OptionsState() = default;
+
+	OptionsState(const OptionsState&) = delete;
+	OptionsState& operator=(const OptionsState&) = delete;
+
+	
 	int m_iCursor = 0;
+
+
+	static OptionsState* s_pInstance;
+
+	// helper
+	void ChangeSfxVolume(int vol);
+	void ChangeMusicVolume(int vol);
+
+	void DrawSfxVolume();
+	void DrawMusicVolume();
+	void DrawSoundBars();
+
+	// writes out volume to txt file
+	void OutputVolumeToFile();
 };
 

@@ -14,7 +14,6 @@
 #include "Entity.h"
 #include "Player.h"
 #include "Enemy.h"
-#include "Boss.h"
 #include "Projectile.h"
 #include "CreateBulletMessage.h"
 #include "DestroyEntityMessage.h"
@@ -73,13 +72,10 @@ void GameplayState::DeleteInstance(void)
 	m_hEnemyImgL1 = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_EnemyLvl1.png", SGD::Color{ 255, 255, 255 });
 	m_hProjectileSecImage = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_ProjectileSec.png", SGD::Color{ 255, 255, 255 });
 
-	// loads sfx + background music
-	m_hProjectileSecSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_SecondaryShotSfx.wav");
-	m_hBackgroundMus = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_BackgroundMusic.xwm");
-	m_hEnemyHitSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_EnemyHitSfx.wav");
-	m_hGameOverSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_GameOverSfx.wav");
+	
+
 	// plays background music looping
-	SGD::AudioManager::GetInstance()->PlayAudio(m_hBackgroundMus, playBackgMus);
+	SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetBackgroundMus(), playBackgMus);
 
 	// Allocate the Entity Manager
 	m_pEntities = new EntityManager;
@@ -117,11 +113,7 @@ void GameplayState::DeleteInstance(void)
 	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hLevel1Background);
 	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hEnemyImgL1);
 	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hProjectileSecImage);
-	// unloads audio
-	SGD::AudioManager::GetInstance()->UnloadAudio(m_hProjectileSecSfx);
-	SGD::AudioManager::GetInstance()->UnloadAudio(m_hBackgroundMus);
-	SGD::AudioManager::GetInstance()->UnloadAudio(m_hEnemyHitSfx);
-	SGD::AudioManager::GetInstance()->UnloadAudio(m_hGameOverSfx);
+	
 
 
 	GameplayState::GetInstance()->DeleteInstance();
@@ -290,7 +282,7 @@ Entity* GameplayState::CreatePlayer(void)
 	player->SetPosition(SGD::Point{ 0, Game::GetInstance()->GetScreenSize().height - 105});
 	player->SetSize(SGD::Size{ 32, 32 });
 	player->SetVelocity(SGD::Vector{ 1.5f, 1.5f });
-	player->SetSecondarySfx(m_hProjectileSecSfx);
+	player->SetSecondarySfx(Game::GetInstance()->GetSecShotSfx());
 	player->SetScore(0);
 	player->SetNumLives(1);
 	
@@ -307,7 +299,7 @@ Entity* GameplayState::CreateLvl1Enemy(int _y)
 	enemy->SetVelocity(SGD::Vector{ 0.4f, 0 });
 	enemy->SetPosition(SGD::Point{ Game::GetInstance()->GetScreenSize().width, _y * enemy->GetSize().height * 1.5f });
 	enemy->SetNumHitsTaken(0);
-	enemy->SetEnemyHitSfx(m_hEnemyHitSfx);
+	enemy->SetEnemyHitSfx(Game::GetInstance()->GetEnemyHitSfx());
 	return enemy;
 }
 
@@ -349,6 +341,7 @@ bool GameplayState::Pause(void)
 	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Down))
 	{
 		++m_iCursor;
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
 		if (m_iCursor > 1)
 			m_iCursor = 0;
 	}
@@ -356,6 +349,8 @@ bool GameplayState::Pause(void)
 	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Up))
 	{
 		--m_iCursor;
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
+
 		if (m_iCursor < 0)
 			m_iCursor = 1;
 	}
@@ -364,6 +359,8 @@ bool GameplayState::Pause(void)
 	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Escape)
 		&& !m_bisKeyPressed)
 	{
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
+
 		m_bisGamePaused = false;
 		m_bisKeyPressed = true;
 		return true;
@@ -374,7 +371,8 @@ bool GameplayState::Pause(void)
 	
 	if (SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Enter))
 	{
-		 
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
+
 		if (m_iCursor == 0)// resumes game
 		{
 			m_bisGamePaused = false;
@@ -384,7 +382,7 @@ bool GameplayState::Pause(void)
 		{
 			m_bisGamePaused = false;
 			// stops the music from playing in the menu screen
-			SGD::AudioManager::GetInstance()->StopAudio(m_hBackgroundMus);
+			SGD::AudioManager::GetInstance()->StopAudio(Game::GetInstance()->GetBackgroundMus());
 			Game::GetInstance()->ChangeState(MainMenuState::GetInstance());
 
 			return true;
@@ -405,7 +403,7 @@ void GameplayState::DrawPlayerScore(void)
 	font->Draw("Score: ", SGD::Point{ 70, 740 }, 0.8f);
 	font->Draw(ch, SGD::Point{ 230, 740 }, 0.8f);
 
-
+	
 }
 
 void GameplayState::DrawEnemiesLeft(void)
@@ -442,8 +440,8 @@ bool GameplayState::GameIsLost(float time)
 
 	if (m_bPlayGameOverSfx)
 	{
-		SGD::AudioManager::GetInstance()->StopAudio(m_hBackgroundMus);
-		SGD::AudioManager::GetInstance()->PlayAudio(GetGameOverSfx(), false);
+		SGD::AudioManager::GetInstance()->StopAudio(Game::GetInstance()->GetBackgroundMus());
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetGameOverSfx(), false);
 		Game::GetInstance()->SetGameLost(true);
 		m_bPlayGameOverSfx = false;
 	}
@@ -465,8 +463,8 @@ bool GameplayState::GameIsWon(float time)
 
 	if (m_bPlayWinSfx)
 	{
-		SGD::AudioManager::GetInstance()->StopAudio(m_hBackgroundMus);
-		SGD::AudioManager::GetInstance()->PlayAudio(GetGameOverSfx(), false);
+		SGD::AudioManager::GetInstance()->StopAudio(Game::GetInstance()->GetBackgroundMus());
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetGameWinSfx(), false);
 
 		m_bPlayWinSfx = false;
 	}

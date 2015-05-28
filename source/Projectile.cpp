@@ -1,3 +1,9 @@
+//*********************************************************************//
+//	File:		Projectile.cpp
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Handles the Projectile entity
+//*********************************************************************//
 #include "Projectile.h"
 #include "DestroyEntityMessage.h"
 #include "GameplayState.h"
@@ -29,16 +35,21 @@ void Projectile::Render(void)
 void Projectile::Update(float elapsedTime)
 {
 
-	if (GetPosition().x < 0
-		|| GetPosition().x >= Game::GetInstance()->GetScreenSize().width
-		|| GetPosition().y < 0
-		|| GetPosition().y >= Game::GetInstance()->GetScreenSize().height)
+	if (!Game::GetInstance()->IsGameLost()
+		&& !GameplayState::GetInstance()->IsGamePaused()
+		&& !Game::GetInstance()->IsGameWon())
 	{
-		DestroyEntityMessage* destroyMsg = new DestroyEntityMessage(this);
-		destroyMsg->QueueMessage();
-	}
+		if (GetPosition().x < 0
+			|| GetPosition().x >= Game::GetInstance()->GetScreenSize().width
+			|| GetPosition().y < 0
+			|| GetPosition().y >= Game::GetInstance()->GetScreenSize().height)
+		{
+			DestroyEntityMessage* destroyMsg = new DestroyEntityMessage(this);
+			destroyMsg->QueueMessage();
+		}
 
-	Entity::Update(elapsedTime);
+		Entity::Update(elapsedTime);
+	}
 }
 
 void Projectile::SetProjectileOwner(Entity* _owner)

@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		Game.cpp
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	Game class initializes the SGD Wrappers
 //				and runs the game state machine
 //*********************************************************************//
@@ -19,6 +19,7 @@
 #include "BitmapFont.h"
 #include "IGameState.h"
 #include "MainMenuState.h"
+#include "IntroScreenState.h"
 
 #include <ctime>
 #include <cstdlib>
@@ -75,6 +76,13 @@ bool Game::Initialize( void )
 	m_hPlayerImg = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_Character1Sprite.png", SGD::Color{ 255, 255, 255, 255 });
 	m_hEnemyImg = SGD::GraphicsManager::GetInstance()->LoadTexture(L"./resource/graphics/ELW_EnemyLvl1.png", SGD::Color{ 255, 255, 255, 255 });
 
+	// loads sfx + background music
+	m_hProjectileSecSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_SecondaryShotSfx.wav");
+	m_hBackgroundMus = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_BackgroundMusic.xwm");
+	m_hEnemyHitSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_EnemyHitSfx.wav");
+	m_hGameOverSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_GameOverSfx.wav");
+	m_hGameWinSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_GameWinSfx.wav");
+	m_hMenuChangeSfx = SGD::AudioManager::GetInstance()->LoadAudio(L"./resource/audio/ELW_MenuChangeSfx.wav");
 	
 // Hide the console window
 #if !defined( DEBUG ) && !defined( _DEBUG )
@@ -94,7 +102,7 @@ bool Game::Initialize( void )
 
 	
 	// Start in the MainMenuState
-	ChangeState( MainMenuState::GetInstance() );
+	ChangeState(IntroScreenState::GetInstance() );
 	
 
 	// Store the starting time
@@ -169,7 +177,14 @@ void Game::Terminate( void )
 	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hPlayerImg);
 	SGD::GraphicsManager::GetInstance()->UnloadTexture(m_hEnemyImg);
 
-
+	
+	// unloads audio
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hProjectileSecSfx);
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hBackgroundMus);
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hEnemyHitSfx);
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hGameOverSfx);
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hGameWinSfx);
+	SGD::AudioManager::GetInstance()->UnloadAudio(m_hMenuChangeSfx);
 
 	// Terminate the SGD wrappers (in reverse order)
 	SGD::AudioManager::GetInstance()->Terminate();

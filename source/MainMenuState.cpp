@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		MainMenuState.cpp
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	MainMenuState class handles the main menu
 //*********************************************************************//
 
@@ -42,8 +42,14 @@ void MainMenuState::DeleteInstance(void)
 	// Reset the cursor to the top
 	// (commented out to keep the last cursor position)
 	//m_nCursor = 0;
+	SGD::AudioManager::GetInstance()->StopAudio(Game::GetInstance()->GetBackgroundMus());
+
 	Game::GetInstance()->SetGameLost(false);
 	Game::GetInstance()->SetVictory(false);
+	Game::GetInstance()->SetNumEnemies(5);
+	OptionsState::GetInstance()->ReadInVolume();
+	OptionsState::GetInstance()->DeleteInstance();
+
 }
 
 //*********************************************************************//
@@ -67,7 +73,11 @@ void MainMenuState::DeleteInstance(void)
 
 	// Press Escape to quit
 	if (pInput->IsKeyPressed(SGD::Key::Escape) == true)
+	{
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
 		m_nCursor = 4;
+	}
+		
 
 
 	// Move the cursor?
@@ -75,7 +85,7 @@ void MainMenuState::DeleteInstance(void)
 	{
 		// next option
 		m_nCursor++;
-
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
 		// wrap around
 		if( m_nCursor > 4 )
 			m_nCursor = 0;
@@ -84,6 +94,7 @@ void MainMenuState::DeleteInstance(void)
 	{
 		// prev option
 		m_nCursor--;
+		SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
 
 		// wrap around
 		if( m_nCursor < 0 )
@@ -99,6 +110,8 @@ void MainMenuState::DeleteInstance(void)
 		// Which option is chosen?
 		if( m_nCursor == 0 )
 		{
+			SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
+
 			// ChangeState is VERY VOLATILE!!!
 			//	- can only be safely called by a game state's
 			//	 Update or Render methods!
@@ -109,21 +122,29 @@ void MainMenuState::DeleteInstance(void)
 		}
 		else if (m_nCursor == 1)
 		{
+			SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
+
 			Game::GetInstance()->ChangeState(OptionsState::GetInstance());
 			return true;
 		}
 		else if (m_nCursor == 2)
 		{
+			SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
+
 			Game::GetInstance()->ChangeState(HowToPlayState::GetInstance());
 			return true;
 		}
 		else if (m_nCursor == 3)
 		{
+			SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
+
 			Game::GetInstance()->ChangeState(CreditsState::GetInstance());
 			return true;
 		}
 		else //m_nCursor == 4
 		{
+			SGD::AudioManager::GetInstance()->PlayAudio(Game::GetInstance()->GetMenuChangeSfx());
+
 			return false;	// quit the game
 		}
 	}
@@ -170,3 +191,4 @@ void MainMenuState::DeleteInstance(void)
 	pFont->Draw("0", { (width - (7 * 32)) / 2 - 50, 300.0f + 50 * m_nCursor },
 		1.0f, { 255, 255, 255 });
 }
+

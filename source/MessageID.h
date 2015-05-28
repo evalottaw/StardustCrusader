@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		MessageID.h
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	MessageID enum class defines the message types
 //*********************************************************************//
 

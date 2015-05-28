@@ -1,3 +1,9 @@
+//*********************************************************************//
+//	File:		Projectile.h
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Handles the Projectile entity
+//*********************************************************************//
 #pragma once
 #include "Entity.h"
 class Projectile :

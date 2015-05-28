@@ -1,3 +1,9 @@
+//*********************************************************************//
+//	File:		CreditsState.cpp
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Handles the Credits State
+//*********************************************************************//
 #include "CreditsState.h"
 #include "MainMenuState.h"
 #include "Game.h"
@@ -61,7 +67,7 @@ void CreditsState::Render(float elapsedTime)
 	font->Draw("Credits", SGD::Point{ 320, 200 - m_fScrollCreditsAm }, 1.5f);
 	font->Draw("Eva-Lotta Wahlberg", SGD::Point{ 320, 400 - m_fScrollCreditsAm }, 0.6f, SGD::Color{ 255, 255, 255, 255 });
 	font->Draw("Structure of Game Design", SGD::Point{ 280, 480 - m_fScrollCreditsAm }, 0.6f, SGD::Color{ 255, 255, 255, 255 });
-	font->Draw("at Full Sail University", SGD::Point{ 280, 50000 - m_fScrollCreditsAm }, 0.6f, SGD::Color{ 255, 255, 255, 255 });
+	font->Draw("at Full Sail University", SGD::Point{ 280, 500 - m_fScrollCreditsAm }, 0.6f, SGD::Color{ 255, 255, 255, 255 });
 
 
 }

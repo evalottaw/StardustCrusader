@@ -1,3 +1,9 @@
+//*********************************************************************//
+//	File:		Enemy.cpp
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Handles the Enemy entity
+//*********************************************************************//
 #include "Enemy.h"
 #include "Game.h"
 #include "GameplayState.h"
@@ -64,7 +70,14 @@ void Enemy::HandleEvent(const SGD::Event* pEvent)
 {
 	if (pEvent->GetEventID() == "ENEMY_HIT")
 	{
-		SetNumHitsTaken(GetNumHitsTaken() + 1);
+		if (GameplayState::GetInstance()->DoubleDmg())
+		{
+			SetNumHitsTaken(GetNumHitsTaken() + 2);
+			GameplayState::GetInstance()->SetDoubleDmg(false);
+		}
+			
+		else
+			SetNumHitsTaken(GetNumHitsTaken() + 1);
 		SGD::AudioManager::GetInstance()->PlayAudio(GetEnemyHitSfx());
 	}
 	

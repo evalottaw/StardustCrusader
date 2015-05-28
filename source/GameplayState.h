@@ -52,12 +52,16 @@ public:
 
 	SGD::HTexture GetLevelBackground(int _level);
 	SGD::HTexture GetEnemyImg(void) const { return m_hEnemyImgL1; }
-	SGD::HAudio GetSecShotSfx(void) const { return m_hProjectileSecSfx; }
-	SGD::HAudio GetGameOverSfx(void) const { return m_hGameOverSfx; }
+
+	
+
 	bool IsGameLost() const { return m_bGameLost; }
 	void SetGameLost(bool _lost) { m_bGameLost = _lost; }
 	bool IsGamePaused() const { return m_bisGamePaused; }
 	bool Pause(void);
+
+	bool DoubleDmg() { return m_bisDoubleDmg; }
+	void SetDoubleDmg(bool _double) { m_bisDoubleDmg = _double; }
 
 
 private:
@@ -85,17 +89,15 @@ private:
 	SGD::HTexture m_hEnemyImgL1 = SGD::INVALID_HANDLE;
 	SGD::HTexture m_hProjectileSecImage = SGD::INVALID_HANDLE;
 
-	SGD::HAudio m_hProjectileSecSfx = SGD::INVALID_HANDLE;
-	SGD::HAudio m_hBackgroundMus = SGD::INVALID_HANDLE;
-	SGD::HAudio m_hEnemyHitSfx = SGD::INVALID_HANDLE;
-	SGD::HAudio m_hGameOverSfx = SGD::INVALID_HANDLE;
+	
 
 
 	Entity* m_pPlayer;
 	bool m_bisGamePaused = false, m_bisKeyPressed = false;
 	bool playBackgMus = true, m_bGameLost = false, m_bPlayGameOverSfx = true, m_bPlayWinSfx = true;
+	bool m_bisDoubleDmg = false;
 	int m_iCursor = 0;
-	float m_fWait = 4.0f;
+	float m_fWait = 5.0f;
 
 	
 
@@ -105,4 +107,5 @@ private:
 	void HoldEnemyCreation(int _level);
 	bool GameIsLost(float time);
 	bool GameIsWon(float time);
+
 };

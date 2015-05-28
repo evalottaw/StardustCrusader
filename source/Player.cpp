@@ -63,9 +63,9 @@ void Player::Update(float _elapsedTime)
 		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::S))
 			m_ptPosition.y = GetPosition().y + GetVelocity().y * _elapsedTime * 60;
 
-		if ((SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Spacebar)
+		if ((SGD::InputManager::GetInstance()->IsKeyPressed(SGD::Key::Space)
 			&& m_fShotCooldown > SECONDARY_SHOT_DELAY) 
-			|| (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::Spacebar)
+			|| (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::Space)
 			&& m_fShotCooldown > SECONDARY_SHOT_DELAY))
 		{
 			SGD::AudioManager::GetInstance()->PlayAudio(GetSecondarySfx(), false);
@@ -75,7 +75,22 @@ void Player::Update(float _elapsedTime)
 			
 		}
 
-		
+		if (SGD::InputManager::GetInstance()->IsKeyDown(SGD::Key::C))
+		{
+			m_fincreaseCharge += _elapsedTime * 60;
+			if (m_fincreaseCharge >= 30.0f)
+				m_fincreaseCharge = 30.0f;
+
+			
+		}
+
+		if (SGD::InputManager::GetInstance()->IsKeyReleased(SGD::Key::C))
+		{
+			m_fincreaseCharge = 0.0f;
+			GameplayState::GetInstance()->SetDoubleDmg(true);
+			CreateBulletMessage* message = new CreateBulletMessage(this);
+			message->QueueMessage();
+		}
 
 		
 	}
@@ -93,6 +108,8 @@ void Player::Render(void)
 		SGD::GraphicsManager::GetInstance()->DrawTextureSection(GetImage(),
 		SGD::Point{ m_ptPosition.x + GetSize().width * 2.5f, m_ptPosition.y }, SGD::Rectangle{ 0, 0, 32, 32 }, {}, {}, {}, SGD::Size{ -2.5f, 2.5f });
 
+	SGD::GraphicsManager::GetInstance()->DrawLine(SGD::Point{ m_ptPosition.x, m_ptPosition.y },
+		SGD::Point{ m_ptPosition.x + m_fincreaseCharge * 2.5f, m_ptPosition.y }, SGD::Color{ 0, 255, 0 });
 	
 }
 

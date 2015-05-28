@@ -1,3 +1,9 @@
+//*********************************************************************//
+//	File:		CreditsState.h
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Handles the Credits State
+//*********************************************************************//
 #pragma once
 #include "IGameState.h"
 class CreditsState :
@@ -19,7 +25,7 @@ private:
 	static CreditsState* s_pInstance;
 
 	float m_fScrollCreditsAm = 0;
-	float m_fWait = 5.0f;
+	float m_fWait = 8.0f;
 
 	CreditsState(void) = default;
 	~CreditsState(void) = default;

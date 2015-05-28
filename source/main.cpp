@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		main.cpp
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	Application entry point
 //*********************************************************************//
 

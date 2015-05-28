@@ -71,5 +71,7 @@ private:
 	float m_fShotCooldown = 0.0f;
 	int m_uiPlayerScore = 0;
 	unsigned int m_uiPlayerLives = 1;
+	float m_fincreaseCharge = 0.0f;
+
 };
 

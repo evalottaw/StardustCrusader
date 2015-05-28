@@ -1,3 +1,9 @@
+//*********************************************************************//
+//	File:		Enemy.h
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Handles the Enemy entity
+//*********************************************************************//
 #pragma once
 #include "Entity.h"
 #include "../SGD Wrappers/SGD_IListener.h"

@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		MainMenuState.h
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	MainMenuState class handles the main menu
 //*********************************************************************//
 
@@ -48,6 +48,8 @@ private:
 	int m_nCursor = 0;
 
 	
+
+
 
 };
 

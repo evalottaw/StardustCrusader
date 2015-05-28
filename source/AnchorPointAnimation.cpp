@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		AnchorPointAnimation.cpp
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	AnchorPointAnimation class runs an animation of 
 //				variable-size frames based on the elapsed time.
 //

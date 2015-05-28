@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		BitmapFont.cpp
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	BitmapFont class draws text using an image of
 //				fixed-size glyphs
 //*********************************************************************//

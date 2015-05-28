@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		EntityManager.cpp
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	EntityManager class stores & maintains all game entities
 //*********************************************************************//
 

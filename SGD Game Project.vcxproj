@@ -92,7 +92,6 @@
     <ClCompile Include="SGD Wrappers\SGD_Utilities.cpp" />
     <ClCompile Include="source\AnchorPointAnimation.cpp" />
     <ClCompile Include="source\BitmapFont.cpp" />
-    <ClCompile Include="source\Boss.cpp" />
     <ClCompile Include="source\CellAnimation.cpp" />
     <ClCompile Include="source\CreateBulletMessage.cpp" />
     <ClCompile Include="source\CreditsState.cpp" />
@@ -103,6 +102,7 @@
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\GameplayState.cpp" />
     <ClCompile Include="source\HowToPlayState.cpp" />
+    <ClCompile Include="source\IntroScreenState.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\MainMenuState.cpp" />
     <ClCompile Include="source\OptionsState.cpp" />
@@ -129,7 +129,6 @@
     <ClInclude Include="SGD Wrappers\SGD_Utilities.h" />
     <ClInclude Include="source\AnchorPointAnimation.h" />
     <ClInclude Include="source\BitmapFont.h" />
-    <ClInclude Include="source\Boss.h" />
     <ClInclude Include="source\CellAnimation.h" />
     <ClInclude Include="source\CreateBulletMessage.h" />
     <ClInclude Include="source\CreditsState.h" />
@@ -142,6 +141,7 @@
     <ClInclude Include="source\HowToPlayState.h" />
     <ClInclude Include="source\IEntity.h" />
     <ClInclude Include="source\IGameState.h" />
+    <ClInclude Include="source\IntroScreenState.h" />
     <ClInclude Include="source\MainMenuState.h" />
     <ClInclude Include="source\MessageID.h" />
     <ClInclude Include="source\OptionsState.h" />

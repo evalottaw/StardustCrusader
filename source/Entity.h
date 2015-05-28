@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		Entity.h
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	Entity class is the base moving-object entity,
 //				storing shared members for children classes
 //*********************************************************************//

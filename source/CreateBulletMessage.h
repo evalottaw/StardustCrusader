@@ -1,3 +1,9 @@
+//*********************************************************************//
+//	File:		CreateBulletMessage.h
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
+//	Purpose:	Creates a bullet message.
+//*********************************************************************//
 #pragma once
 #include "../SGD Wrappers/SGD_Message.h"
 #include "Player.h"

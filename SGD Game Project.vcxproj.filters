@@ -102,9 +102,6 @@
     <ClCompile Include="source\Enemy.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="source\Boss.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
     <ClCompile Include="source\Projectile.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -113,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="source\DestroyEntityMessage.cpp">
       <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="source\IntroScreenState.cpp">
+      <Filter>Game States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,9 +215,6 @@
     <ClInclude Include="source\Enemy.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="source\Boss.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
     <ClInclude Include="source\Projectile.h">
       <Filter>Entities</Filter>
     </ClInclude>
@@ -226,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="source\DestroyEntityMessage.h">
       <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="source\IntroScreenState.h">
+      <Filter>Game States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

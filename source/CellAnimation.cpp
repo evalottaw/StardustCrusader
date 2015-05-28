@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		CellAnimation.cpp
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	CellAnimation class runs an animation of
 //				fixed-size frames based on the elapsed time
 //*********************************************************************//

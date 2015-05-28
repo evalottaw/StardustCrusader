@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		IEntity.h
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	IEntity class is the base interface for all entities,
 //				declaring the shared virtual methods
 //*********************************************************************//

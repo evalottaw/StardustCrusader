@@ -1,7 +1,7 @@
 //*********************************************************************//
 //	File:		DestroyEntityMessage.h
-//	Author:		
-//	Course:		
+//	Author:		Eva-Lotta Wahlberg
+//	Course:		SGD 1505
 //	Purpose:	DestroyEntityMessage class stores the Entity to remove
 //				from the Entity Manager
 //				This message will be queued into the Message Manager
