@@ -48,7 +48,7 @@ void Enemy::Update(float elapsedTime)
 				SGD::EventManager::GetInstance()->QueueEvent(Event);
 				DestroyEntityMessage* msg = new DestroyEntityMessage(this);
 				msg->QueueMessage();
-				Game::GetInstance()->SetNumEnemies();
+				Game::GetInstance()->SetNumEnemies(Game::GetInstance()->GetNumEnemies() - 1);
 				if (Game::GetInstance()->GetNumEnemies() <= 0)
 					Game::GetInstance()->SetVictory(true);
 				SetNumHitsTaken(0);

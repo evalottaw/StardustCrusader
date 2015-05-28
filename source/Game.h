@@ -68,7 +68,7 @@ public:
 
 	void SetGameLost(bool _lost) { m_bisGameLost = _lost; }
 	void SetVictory(bool _vic) { m_bisVictory = _vic; }
-	void SetNumEnemies() {-- m_iNumEnemies; }
+	void SetNumEnemies(int _num) { m_iNumEnemies = _num; }
 	
 private:
 	//*****************************************************************//
